@@ -1,0 +1,201 @@
+
+// Fonts
+@import url('https://fonts.googleapis.com/css?family=Josefin+Sans&display=swap');
+
+// @import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro&display=swap');
+
+
+// Variables
+@import 'variables';
+$fa-font-path:"../webfonts";
+
+// Bootstrap - Import individual components to avoid escape-svg issues
+@import '~bootstrap/scss/functions';
+@import '~bootstrap/scss/variables';
+@import '~bootstrap/scss/mixins';
+@import '~bootstrap/scss/root';
+@import '~bootstrap/scss/reboot';
+@import '~bootstrap/scss/type';
+@import '~bootstrap/scss/images';
+@import '~bootstrap/scss/code';
+@import '~bootstrap/scss/grid';
+@import '~bootstrap/scss/tables';
+@import '~bootstrap/scss/forms';
+@import '~bootstrap/scss/buttons';
+@import '~bootstrap/scss/transitions';
+@import '~bootstrap/scss/dropdown';
+@import '~bootstrap/scss/button-group';
+@import '~bootstrap/scss/input-group';
+@import '~bootstrap/scss/custom-forms';
+// @import '~bootstrap/scss/nav'; // Skip nav to avoid navbar issues
+@import '~bootstrap/scss/card';
+@import '~bootstrap/scss/breadcrumb';
+@import '~bootstrap/scss/pagination';
+@import '~bootstrap/scss/badge';
+@import '~bootstrap/scss/jumbotron';
+@import '~bootstrap/scss/alert';
+@import '~bootstrap/scss/progress';
+@import '~bootstrap/scss/media';
+@import '~bootstrap/scss/list-group';
+@import '~bootstrap/scss/close';
+@import '~bootstrap/scss/toasts';
+@import '~bootstrap/scss/modal';
+@import '~bootstrap/scss/tooltip';
+@import '~bootstrap/scss/popover';
+@import '~bootstrap/scss/carousel';
+@import '~bootstrap/scss/spinners';
+@import '~bootstrap/scss/utilities';
+@import '~bootstrap/scss/print';
+
+@import '~admin-lte/dist/css/adminlte.css';
+
+// @import '~@fortawesome/fontawesome-free/scss/fontawesome.scss';
+// @import '~@fortawesome/fontawesome-free/scss/solid.scss';
+// @import '~@fortawesome/fontawesome-free/scss/brands.scss';
+
+
+.router-link-exact-active {
+  background-color: blue !important;
+  color: #fff !important;
+}
+
+.nav-link {
+  color: azure!important;
+}
+.modal-header{
+  background-color: cadetblue;
+  color: cornsilk;
+}
+
+
+// .main-header{
+//   height: 81px;
+// }
+// .navbar-nav{
+//  margin-top: 16px;
+
+// }
+
+// .navbar-icon-top .navbar-nav .nav-link > .fa {
+//   position: relative;
+//   width: 36px;
+//   font-size: 24px;
+// }
+
+// .navbar-icon-top .navbar-nav .nav-link > .fa > .badge {
+//   font-size: 0.75rem;
+//   position: absolute;
+//   right: 0;
+//   font-family: sans-serif;
+// }
+
+// .navbar-icon-top .navbar-nav .nav-link > .fa {
+//   top: 3px;
+//   line-height: 12px;
+// }
+
+// .navbar-icon-top .navbar-nav .nav-link > .fa > .badge {
+//   top: -10px;
+// }
+
+@media (max-width: 576px) {
+  .nv{
+    width:160px;
+  }
+  .router-link-exact-active{
+    width:130px;
+  }
+
+  
+}
+
+// @media (min-width: 768px){
+//   .nv{
+//     width:160px;
+//   }
+ 
+//   .router-link-exact-active{
+//     width:130px;
+//   }
+  
+// }
+
+@media (max-width: 1200px){
+  .nav-item{
+    padding-right: 1px!important;
+    font-size: 14px;
+  }
+
+  .res-credit{
+    font-size: 14px;
+  }
+}
+
+
+@media (min-width: 1200px) AND (max-width: 1300px){
+  .nav-item{
+    padding-right: 8px!important;
+    font-size: 12px;
+  }
+
+  .res-credit{
+    font-size: 11;
+  }
+
+}
+
+// @media (max-width: 1300px){
+//   .nav-item{
+//     padding-right: 10px;
+//     font-size: 12px;
+//   }
+
+  
+// }
+
+
+
+@media (min-width: 1300px) AND  (max-width: 1400px){
+  .nav-item{
+    padding-right: 11px;
+    font-size: 12px;
+  }
+
+  .res-credit{
+    font-size: 13px;
+  }
+
+}
+
+
+
+@media (min-width: 1400px){
+  .nav-item{
+    padding-right: 11px;
+    font-size: 13px;
+  }
+
+  .res-credit{
+    font-size: 14px;
+  }
+
+  // .res-nom{
+  //   margin-left: 269px;
+  //   font-size: 28px;
+  // }
+
+  // .res-credit{
+  //   color: red;
+  //   font-size: 20px!important;
+  // }
+
+}
+
+
+
+
+
+.nav-item{
+  padding-right: 18px;
+}
+
