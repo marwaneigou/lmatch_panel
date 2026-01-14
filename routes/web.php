@@ -1,28 +1,40 @@
 <?php
 
-//Clear route cache:
+//Clear route cache (Admin only):
 Route::get('/route-cache', function () {
-    $exitCode = Artisan::call('route:cache');
-    return 'Routes cache cleared';
-});
+    if (Auth::check() && Auth::user()->type === 'Admin') {
+        $exitCode = Artisan::call('route:cache');
+        return 'Routes cache cleared';
+    }
+    abort(403, 'Unauthorized');
+})->middleware('auth');
 
-//Clear config cache:
+//Clear config cache (Admin only):
 Route::get('/config-cache', function () {
-    $exitCode = Artisan::call('config:cache');
-    return 'Config cache cleared';
-});
+    if (Auth::check() && Auth::user()->type === 'Admin') {
+        $exitCode = Artisan::call('config:cache');
+        return 'Config cache cleared';
+    }
+    abort(403, 'Unauthorized');
+})->middleware('auth');
 
-// Clear application cache:
+// Clear application cache (Admin only):
 Route::get('/clear-cache', function () {
-    $exitCode = Artisan::call('cache:clear');
-    return 'Application cache cleared';
-});
+    if (Auth::check() && Auth::user()->type === 'Admin') {
+        $exitCode = Artisan::call('cache:clear');
+        return 'Application cache cleared';
+    }
+    abort(403, 'Unauthorized');
+})->middleware('auth');
 
-// Clear view cache:
+// Clear view cache (Admin only):
 Route::get('/view-clear', function () {
-    $exitCode = Artisan::call('view:clear');
-    return 'View cache cleared';
-});
+    if (Auth::check() && Auth::user()->type === 'Admin') {
+        $exitCode = Artisan::call('view:clear');
+        return 'View cache cleared';
+    }
+    abort(403, 'Unauthorized');
+})->middleware('auth');
 
 /*
 |--------------------------------------------------------------------------

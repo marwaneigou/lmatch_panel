@@ -839,12 +839,7 @@
         },
 
          created() {
-            
-            this.ShowActiveCode(); 
-            Fire.$on('AfterCreate' , () => {
-                    this.ShowActiveCode(); 
-                }); 
-        
+            // Event listener only - API calls already in mounted()
         }
     }
 </script>

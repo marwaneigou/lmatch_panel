@@ -27,9 +27,9 @@
                             <i class="fa fa-plus fa-fw"></i>
                             </button>
                         </div>
-                        <div class="container col-12 bg-white p-3 border mt-2" v-if="show_filter">
+                        <div class="container col-12 glass-table-container p-3 mt-2" v-if="show_filter">
                             <div class="row">
-                                <div class="input-group col-lg-4 col-md-4 col-sm-12 col-xs-12 col-12 mb-2">
+                                <div class="input-group col-12 mb-2">
                                     <input                  
                                     type="text"
                                     class="form-control"
@@ -38,7 +38,7 @@
                                     v-bind:placeholder="trans('search')"
                                     />
                                     <div class="input-group-append" @click="getResults()">
-                                    <span class="input-group-text bg-success"><i class="fa fa-search"></i></span>
+                                    <span class="input-group-text bg-success border-0 text-white"><i class="fa fa-search"></i></span>
                                     </div>
                                 </div>
                             </div>

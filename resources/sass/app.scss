@@ -1,13 +1,10 @@
-
 // Fonts
 @import url('https://fonts.googleapis.com/css?family=Josefin+Sans&display=swap');
-
-// @import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro&display=swap');
-
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Teko:wght@300;400;500;600;700&display=swap');
 
 // Variables
 @import 'variables';
-$fa-font-path:"../webfonts";
+$fa-font-path: "../webfonts";
 
 // Bootstrap - Import individual components to avoid escape-svg issues
 @import '~bootstrap/scss/functions';
@@ -49,153 +46,800 @@ $fa-font-path:"../webfonts";
 
 @import '~admin-lte/dist/css/adminlte.css';
 
-// @import '~@fortawesome/fontawesome-free/scss/fontawesome.scss';
-// @import '~@fortawesome/fontawesome-free/scss/solid.scss';
-// @import '~@fortawesome/fontawesome-free/scss/brands.scss';
+// Custom Dark Mode Overrides
 
+body {
+  background-color: $slate-900;
+  color: $body-color;
+  font-family: 'Inter', sans-serif;
+  min-height: 100vh;
+}
 
+// -----------------------------------------------------------------------------
+// Card Styles (Glassmorphism / Dark)
+// -----------------------------------------------------------------------------
+.card {
+  background-color: rgba(30, 41, 59, 0.7); // Slate 800 with opacity
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  color: #fff;
+  margin-bottom: 1.5rem;
+
+  .card-header {
+    background-color: rgba(15, 23, 42, 0.5); // Slate 900 semi-transparent
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    font-family: 'Teko', sans-serif;
+    font-size: 1.25rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: $green;
+  }
+
+  .card-body {
+    color: #cbd5e1; // Slate 300
+  }
+}
+
+// -----------------------------------------------------------------------------
+// Table Styles
+// -----------------------------------------------------------------------------
+// -----------------------------------------------------------------------------
+// Table Styles (Enhanced Dark Mode)
+// -----------------------------------------------------------------------------
+.table-responsive {
+  border-radius: 8px;
+  overflow-x: auto;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
+}
+
+.table {
+  color: #cbd5e1; // Slate 300
+  background-color: transparent;
+  width: 100%;
+  margin-bottom: 0;
+
+  th,
+  td {
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    vertical-align: middle;
+    padding: 1rem 0.75rem;
+  }
+
+  thead {
+    th {
+      border-bottom: 2px solid $green;
+      border-top: none;
+      color: $green;
+      font-family: 'Teko', sans-serif;
+      text-transform: uppercase;
+      font-size: 1.1rem;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      background-color: rgba(30, 41, 59, 0.8); // Slate 800
+      white-space: nowrap;
+    }
+  }
+
+  tbody {
+    tr {
+      transition: background-color 0.2s ease;
+      background-color: rgba(15, 23, 42, 0.4); // Base row color
+
+      &:nth-of-type(odd) {
+        background-color: rgba(30, 41, 59, 0.4); // Zee-stripe (Slate 800)
+      }
+
+      &:hover {
+        background-color: rgba(16, 185, 129, 0.1) !important; // Emerald tint
+        color: #fff;
+      }
+    }
+  }
+
+  // Icons inside tables
+  .fa {
+    color: $green;
+    margin-right: 5px;
+  }
+}
+
+// -----------------------------------------------------------------------------
+// Pagination Overrides
+// -----------------------------------------------------------------------------
+.pagination {
+  .page-item {
+    .page-link {
+      background-color: $slate-800;
+      border-color: rgba(255, 255, 255, 0.1);
+      color: #cbd5e1;
+
+      &:hover {
+        background-color: lighten($slate-800, 10%);
+        color: #fff;
+      }
+    }
+
+    &.active .page-link {
+      background-color: $green;
+      border-color: $green;
+      color: $slate-900;
+      font-weight: bold;
+    }
+
+    &.disabled .page-link {
+      background-color: $slate-900;
+      border-color: rgba(255, 255, 255, 0.05);
+      color: #64748b;
+    }
+  }
+}
+
+// -----------------------------------------------------------------------------
+// Form/Input Styles
+// -----------------------------------------------------------------------------
+.form-control {
+  background-color: rgba(15, 23, 42, 0.8); // Dark input background
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #fff;
+
+  &:focus {
+    background-color: rgba(15, 23, 42, 1);
+    color: #fff;
+    border-color: $green;
+    box-shadow: 0 0 0 0.2rem rgba(16, 185, 129, 0.25);
+  }
+
+  &::placeholder {
+    color: #64748b; // Slate 500
+  }
+}
+
+// -----------------------------------------------------------------------------
+// Navbar Dropdowns
+// -----------------------------------------------------------------------------
+.dropdown-menu {
+  background-color: $slate-800;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+
+  .dropdown-item {
+    color: #e2e8f0;
+
+    &:hover,
+    &:focus {
+      background-color: $green;
+      color: #fff;
+    }
+  }
+}
+
+// -----------------------------------------------------------------------------
+// Modals
+// -----------------------------------------------------------------------------
+.modal-content {
+  background-color: $slate-900;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #fff;
+
+  .modal-header {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    background-color: $slate-800;
+    color: $green;
+  }
+
+  .modal-footer {
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    background-color: $slate-800;
+  }
+
+  .close {
+    color: #fff;
+    text-shadow: none;
+    opacity: 0.8;
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+}
+
+// -----------------------------------------------------------------------------
+// Navigation (Previous Overrides + Dark Mode)
+// -----------------------------------------------------------------------------
 .router-link-exact-active {
-  background-color: blue !important;
-  color: #fff !important;
+  background-color: $green !important;
+  color: #0f172a !important; // Dark text on green active link
+  font-weight: 600;
+  border-radius: 0.25rem;
 }
 
 .nav-link {
-  color: azure!important;
-}
-.modal-header{
-  background-color: cadetblue;
-  color: cornsilk;
-}
+  color: #94a3b8 !important; // Slate 400
+  transition: color 0.2s;
 
-
-// .main-header{
-//   height: 81px;
-// }
-// .navbar-nav{
-//  margin-top: 16px;
-
-// }
-
-// .navbar-icon-top .navbar-nav .nav-link > .fa {
-//   position: relative;
-//   width: 36px;
-//   font-size: 24px;
-// }
-
-// .navbar-icon-top .navbar-nav .nav-link > .fa > .badge {
-//   font-size: 0.75rem;
-//   position: absolute;
-//   right: 0;
-//   font-family: sans-serif;
-// }
-
-// .navbar-icon-top .navbar-nav .nav-link > .fa {
-//   top: 3px;
-//   line-height: 12px;
-// }
-
-// .navbar-icon-top .navbar-nav .nav-link > .fa > .badge {
-//   top: -10px;
-// }
-
-@media (max-width: 576px) {
-  .nv{
-    width:160px;
+  &:hover {
+    color: $green !important;
   }
-  .router-link-exact-active{
-    width:130px;
-  }
-
-  
 }
 
-// @media (min-width: 768px){
-//   .nv{
-//     width:160px;
-//   }
- 
-//   .router-link-exact-active{
-//     width:130px;
-//   }
-  
-// }
+// -----------------------------------------------------------------------------
+// Custom Utilities for Dashboard
+// -----------------------------------------------------------------------------
+.bg-dark-theme {
+  background-color: $slate-900 !important;
+}
 
-@media (max-width: 1200px){
-  .nav-item{
-    padding-right: 1px!important;
+.text-emerald {
+  color: $green !important;
+}
+
+.text-slate-300 {
+  color: #cbd5e1 !important;
+}
+
+// Specific Button Overrides
+.btn-primary {
+  background-color: $green;
+  border-color: $green;
+  color: #0f172a; // Dark text on green button for contrast
+  font-weight: 600;
+
+  &:hover {
+    background-color: darken($green, 10%);
+    border-color: darken($green, 10%);
+    color: #0f172a;
+  }
+}
+
+.btn-secondary {
+  background-color: $slate-800;
+  border-color: rgba(255, 255, 255, 0.1);
+  color: #fff;
+
+  &:hover {
+    background-color: lighten($slate-800, 5%);
+  }
+}
+
+// -----------------------------------------------------------------------------
+// Global Football Match Night Theme Overrides
+// -----------------------------------------------------------------------------
+
+// Glass Table Container
+.glass-table-container {
+  background: rgba(15, 23, 42, 0.6);
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  overflow: hidden;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+// Global Pagination Container (Floating Glass Bar)
+.card-footer {
+  background: transparent !important;
+  border: none !important;
+  padding: 0.75rem 1.5rem !important;
+  margin-top: 1rem;
+  backdrop-filter: none;
+  display: flex;
+  justify-content: center;
+  width: fit-content;
+  margin-left: auto;
+  margin-right: auto;
+  box-shadow: none !important;
+}
+
+// Global Pagination Styles
+.pagination {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  list-style: none !important;
+  gap: 5px !important;
+}
+
+.pagination li {
+  display: inline-block !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  background: none !important;
+  border: none !important;
+}
+
+.pagination li a,
+.page-link {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 36px !important;
+  height: 36px !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  background: rgba(30, 41, 59, 0.8) !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  border-radius: 8px !important;
+  color: #cbd5e1 !important;
+  font-weight: 600 !important;
+  font-size: 0.95rem !important;
+  text-decoration: none !important;
+  transition: all 0.2s ease !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2) !important;
+}
+
+.pagination li:not(.active) a:hover {
+  background: #334155 !important;
+  color: #fff !important;
+  transform: translateY(-2px) !important;
+  border-color: rgba(255, 255, 255, 0.4) !important;
+}
+
+.pagination li.active a,
+.pagination li.active.success a,
+.page-item.active .page-link {
+  background: #10b981 !important;
+  border-color: #10b981 !important;
+  color: #fff !important;
+  box-shadow: 0 0 10px rgba(16, 185, 129, 0.5) !important;
+  transform: scale(1.05) !important;
+  z-index: 5 !important;
+}
+
+.pagination li.disabled a,
+.page-item.disabled .page-link {
+  opacity: 0.4 !important;
+  cursor: not-allowed !important;
+  background: rgba(15, 23, 42, 0.5) !important;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+// -----------------------------------------------------------------------------
+// Global Modal & Form Overrides (Glass & Neon)
+// -----------------------------------------------------------------------------
+
+.modal-content {
+  background: rgba(15, 23, 42, 0.85);
+  /* Darker glass for modal */
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  color: #e2e8f0;
+}
+
+.modal-header {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  padding: 1.5rem;
+
+  .modal-title {
+    color: #fff;
+    font-family: 'Teko', sans-serif;
+    font-size: 1.8rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    text-shadow: 0 0 10px rgba(16, 185, 129, 0.3);
+  }
+
+  .close {
+    color: #94a3b8;
+    text-shadow: none;
+    opacity: 0.8;
+    transition: all 0.2s;
+
+    &:hover {
+      color: #fff;
+      opacity: 1;
+      transform: rotate(90deg);
+    }
+  }
+}
+
+.modal-body {
+  padding: 1.5rem;
+
+  // Override the draggable item background
+  .item {
+    background: rgba(30, 41, 59, 0.6) !important;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    color: #e2e8f0;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    transition: all 0.2s;
+
+    &:hover {
+      background: rgba(30, 41, 59, 0.8) !important;
+      border-color: rgba(16, 185, 129, 0.3);
+      transform: translateX(5px);
+    }
+
+    label {
+      margin-bottom: 0;
+      cursor: pointer;
+    }
+  }
+}
+
+.modal-footer {
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  padding: 1.5rem;
+
+  // Reset the glass bar style if it inherited from .card-footer
+  // We want modals to be clean, but buttons should pop
+  background: transparent !important;
+  box-shadow: none !important;
+  width: 100%;
+}
+
+// Global Form Elements (Dark Glass)
+.form-control {
+  background-color: rgba(30, 41, 59, 0.6) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  color: #f8fafc !important;
+  border-radius: 8px;
+  padding: 0.6rem 1rem;
+  transition: all 0.3s ease;
+
+  &:focus {
+    background-color: rgba(30, 41, 59, 0.8) !important;
+    border-color: #10b981 !important;
+    /* Emerald focus */
+    box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2) !important;
+  }
+}
+
+// Select specific
+select.form-control {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%2394a3b8' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  background-size: 16px 12px;
+  appearance: none;
+  cursor: pointer;
+
+  option {
+    background-color: #1e293b;
+    color: #f8fafc;
+  }
+}
+
+// Labels
+.form_label,
+.control-label {
+  color: #94a3b8;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+// Checkboxes & Radios (Generic tweaks)
+input[type="checkbox"],
+input[type="radio"] {
+  accent-color: #10b981;
+  cursor: pointer;
+}
+
+// -----------------------------------------------------------------------------
+// Bouquet Items (Grid Layout)
+// ----------------------------------------------------------------------------/* Multi-column layout for Bouquet items */
+.bq_items {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)) !important;
+  gap: 0.75rem !important;
+  max-height: 400px;
+  overflow-y: auto;
+  padding: 0.5rem;
+  width: 100% !important;
+
+  /* Custom scrollbar for webkit browsers */
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.2);
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 3px;
+  }
+
+  .item {
+    background: rgba(30, 41, 59, 0.4) !important;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 6px;
+    padding: 0.75rem;
+    display: flex;
+    align-items: center;
+    transition: all 0.2s ease;
+    cursor: grab;
+    color: #fff;
+    /* Ensure text is white */
+
+    &:active {
+      cursor: grabbing;
+    }
+
+    &:hover {
+      background: rgba(30, 41, 59, 0.6) !important;
+      border-color: rgba(255, 255, 255, 0.1);
+      transform: translateY(-1px);
+    }
+
+    input[type="checkbox"] {
+      margin-right: 0.75rem !important;
+      accent-color: #10B981;
+      /* Emerald green accent */
+      width: 16px;
+      height: 16px;
+      cursor: pointer;
+    }
+
+    label {
+      margin: 0;
+      font-weight: 500;
+      color: #e2e8f0;
+      cursor: pointer;
+      flex: 1;
+      /* Take remaining space */
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+
+      span {
+        font-size: 0.9rem;
+      }
+    }
+
+    .fa-arrows {
+      color: rgba(255, 255, 255, 0.3);
+      margin-left: 0.5rem;
+      font-size: 0.8rem;
+    }
+  }
+}
+
+/* =====================================================
+   TABLE ACTION BUTTONS - MODERN PILL STYLE
+   ===================================================== */
+
+// Make the parent td a flex row container
+table.table td:last-child {
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: wrap;
+  gap: 4px;
+  align-items: center;
+}
+
+// Action buttons container
+td .action-btns,
+td.actions-cell {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+// Base action button style
+table.table td>a,
+.action-btn {
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.25s ease;
+  text-decoration: none !important;
+  position: relative;
+  overflow: hidden;
+  flex-shrink: 0;
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at center, rgba(255, 255, 255, 0.15), transparent);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+
+    &::before {
+      opacity: 1;
+    }
+  }
+
+  i.fa {
     font-size: 14px;
+    transition: transform 0.2s ease;
+    margin: 0 !important;
   }
 
-  .res-credit{
-    font-size: 14px;
+  &:hover i.fa {
+    transform: scale(1.15);
   }
 }
 
+// Specific button colors based on action type
+table.table td>a {
 
-@media (min-width: 1200px) AND (max-width: 1300px){
-  .nav-item{
-    padding-right: 8px!important;
-    font-size: 12px;
+  // Edit button - Blue
+  &[title*="Edit"],
+  .fa-pencil {
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(59, 130, 246, 0.1));
+    border-color: rgba(59, 130, 246, 0.4);
+
+    i {
+      color: #3b82f6 !important;
+    }
+
+    &:hover {
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.4), rgba(59, 130, 246, 0.2));
+      border-color: rgba(59, 130, 246, 0.7);
+    }
   }
 
-  .res-credit{
-    font-size: 11;
+  // Reset button - Orange
+  &[title="Reset"] {
+    background: linear-gradient(135deg, rgba(249, 115, 22, 0.2), rgba(249, 115, 22, 0.1));
+    border-color: rgba(249, 115, 22, 0.4);
+
+    i {
+      color: #f97316 !important;
+    }
+
+    &:hover {
+      background: linear-gradient(135deg, rgba(249, 115, 22, 0.4), rgba(249, 115, 22, 0.2));
+      border-color: rgba(249, 115, 22, 0.7);
+    }
   }
 
+  // Download button - Cyan
+  &[title="Download"],
+  &[title*="download"] {
+    background: linear-gradient(135deg, rgba(6, 182, 212, 0.2), rgba(6, 182, 212, 0.1));
+    border-color: rgba(6, 182, 212, 0.4);
+
+    i {
+      color: #06b6d4 !important;
+    }
+
+    &:hover {
+      background: linear-gradient(135deg, rgba(6, 182, 212, 0.4), rgba(6, 182, 212, 0.2));
+      border-color: rgba(6, 182, 212, 0.7);
+    }
+  }
+
+  // VPN/Shield button - Green
+  &[title*="VPN"],
+  &[title*="Activate"] {
+    background: linear-gradient(135deg, rgba(34, 197, 94, 0.2), rgba(34, 197, 94, 0.1));
+    border-color: rgba(34, 197, 94, 0.4);
+
+    i {
+      color: #22c55e !important;
+    }
+
+    &:hover {
+      background: linear-gradient(135deg, rgba(34, 197, 94, 0.4), rgba(34, 197, 94, 0.2));
+      border-color: rgba(34, 197, 94, 0.7);
+    }
+  }
+
+  // Renew button - Purple
+  &[title="Renew"],
+  &[title*="renew"] {
+    background: linear-gradient(135deg, rgba(168, 85, 247, 0.2), rgba(168, 85, 247, 0.1));
+    border-color: rgba(168, 85, 247, 0.4);
+
+    i {
+      color: #a855f7 !important;
+    }
+
+    &:hover {
+      background: linear-gradient(135deg, rgba(168, 85, 247, 0.4), rgba(168, 85, 247, 0.2));
+      border-color: rgba(168, 85, 247, 0.7);
+    }
+  }
+
+  // Transfer button - Indigo
+  &[title*="Transfer"],
+  &[title*="Active code"] {
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(99, 102, 241, 0.1));
+    border-color: rgba(99, 102, 241, 0.4);
+
+    i {
+      color: #6366f1 !important;
+    }
+
+    &:hover {
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.4), rgba(99, 102, 241, 0.2));
+      border-color: rgba(99, 102, 241, 0.7);
+    }
+  }
+
+  // Toggle/Enable - Teal
+  &[title="Enable"],
+  &[title="Disable"] {
+    background: linear-gradient(135deg, rgba(20, 184, 166, 0.2), rgba(20, 184, 166, 0.1));
+    border-color: rgba(20, 184, 166, 0.4);
+
+    i {
+      color: #14b8a6 !important;
+    }
+
+    &:hover {
+      background: linear-gradient(135deg, rgba(20, 184, 166, 0.4), rgba(20, 184, 166, 0.2));
+      border-color: rgba(20, 184, 166, 0.7);
+    }
+  }
+
+  // Delete button - Red
+  &[title="Delete"],
+  &[title*="delete"] {
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.2), rgba(239, 68, 68, 0.1));
+    border-color: rgba(239, 68, 68, 0.4);
+
+    i {
+      color: #ef4444 !important;
+    }
+
+    &:hover {
+      background: linear-gradient(135deg, rgba(239, 68, 68, 0.4), rgba(239, 68, 68, 0.2));
+      border-color: rgba(239, 68, 68, 0.7);
+    }
+  }
+
+  // Coupon button - Gold
+  &[title*="Coupon"],
+  &[title*="coupon"] {
+    background: linear-gradient(135deg, rgba(234, 179, 8, 0.2), rgba(234, 179, 8, 0.1));
+    border-color: rgba(234, 179, 8, 0.4);
+
+    i {
+      color: #eab308 !important;
+    }
+
+    &:hover {
+      background: linear-gradient(135deg, rgba(234, 179, 8, 0.4), rgba(234, 179, 8, 0.2));
+      border-color: rgba(234, 179, 8, 0.7);
+    }
+  }
 }
 
-// @media (max-width: 1300px){
-//   .nav-item{
-//     padding-right: 10px;
-//     font-size: 12px;
-//   }
+// Tooltip enhancement
+table.table td>a[title] {
+  cursor: pointer;
 
-  
-// }
-
-
-
-@media (min-width: 1300px) AND  (max-width: 1400px){
-  .nav-item{
-    padding-right: 11px;
-    font-size: 12px;
+  &:hover::after {
+    content: attr(title);
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 4px 8px;
+    background: rgba(0, 0, 0, 0.9);
+    color: #fff;
+    font-size: 11px;
+    white-space: nowrap;
+    border-radius: 4px;
+    margin-bottom: 6px;
+    z-index: 100;
+    pointer-events: none;
   }
-
-  .res-credit{
-    font-size: 13px;
-  }
-
 }
-
-
-
-@media (min-width: 1400px){
-  .nav-item{
-    padding-right: 11px;
-    font-size: 13px;
-  }
-
-  .res-credit{
-    font-size: 14px;
-  }
-
-  // .res-nom{
-  //   margin-left: 269px;
-  //   font-size: 28px;
-  // }
-
-  // .res-credit{
-  //   color: red;
-  //   font-size: 20px!important;
-  // }
-
-}
-
-
-
-
-
-.nav-item{
-  padding-right: 18px;
-}
-

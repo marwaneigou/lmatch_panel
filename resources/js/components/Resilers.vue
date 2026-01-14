@@ -31,24 +31,41 @@
                                 <i class="fa fa-plus fa-fw"></i>
                             </button>
                         </div>
-                        <div class="container col-12 bg-white p-3 border mt-2" v-if="show_filter">
-                            <div class="row">
-                                <div class="input-group col-lg-4 col-md-4 col-sm-12 col-xs-12 col-12 mb-2">
-                                    <input                  
-                                    type="text"
-                                    class="form-control"
-                                    name="search"
-                                    v-model="searchQuery"
-                                    v-bind:placeholder="trans('search')"
-                                    />
-                                    <div class="input-group-append" @click="getResults()">
-                                    <span class="input-group-text bg-success"><i class="fa fa-search"></i></span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        </div>
+                        <div class="container col-12 glass-table-container p-3 mt-2" v-if="show_filter">
+                <div class="row">
+                  <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 col-12 mb-2">
+                    <select class="form-control" v-model="filterVal" @change="filter()">
+                      <option value="0" selected>{{trans('all_items')}}</option>
+                      <option value="1">{{trans('expired')}}</option>
+                      <option value="2">{{trans('online')}}</option>
+                      <option value="3">{{trans('alm_expired')}}</option>
+                      <option value="4">{{trans('trial')}}</option>
+                      <option value="5">{{trans('disabled')}}</option>
+                      <option value="6">{{trans('enabled')}}</option>                  
+                    </select>
+                  </div>
+                  <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 col-12 mb-2">
+                    <select class="form-control" v-model="byUser" @change="showResDet()">
+                      <option value="">{{trans('all')}}</option>
+                      <option v-if="res.user" v-for="res in resllers" v-bind:key="res.user_id" :value="res.user_id">{{res.user ? res.user : ''}}</option>
+                    </select>
+                  </div>
+                  <div class="input-group col-lg-4 col-md-4 col-sm-12 col-xs-12 col-12 mb-2">
+                    <input                  
+                      type="text"
+                      class="form-control"
+                      name="search"
+                      v-model="searchQuery"
+                      v-bind:placeholder="trans('search')"
+                    />
+                    <div class="input-group-append" @click="getResults()">
+                      <span class="input-group-text bg-success border-0 text-white"><i class="fa fa-search"></i></span>
                     </div>
+                  </div>
+                </div>                
+              </div>
+                    </div>
+                </div>
                     <div class="card-body table-responsive p-0">
                         <table class="table table-hover">
                             <thead><tr>
@@ -971,13 +988,7 @@ import LineChart from './LineChart.vue'
         },
 
         created() {
-            this.getPack();
-            this.ShowUsers(); 
-            Fire.$on('AfterCreate' , () => {
-                    this.ShowUsers(); 
-                    this.getPack();
-                }); 
-            
+            // Event listener only - API calls already in mounted()
         }
 
         

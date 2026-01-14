@@ -1,164 +1,245 @@
-
-
-<!------ Include the above in your HEAD tag ---------->
-
 <!DOCTYPE html>
-<html>
-  
+<html lang="en">
+
 <head>
-	<title>Login Page</title>
+	<title>Panel L'MATCH</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" integrity="sha384-gfdkjb5BdAXd+lj+gudLWI+BXq4IuLW5IT+brZEZsLFm++aCMlF1V92rMkPaX4PP" crossorigin="anonymous">
-    <!-- CSRF Token -->
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-	<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-	<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
-	<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-	<!-- <script src='https://www.google.com/recaptcha/api.js'></script> -->
+	<!-- Google Fonts: Teko for headers, Inter for body -->
+	<link
+		href="https://fonts.googleapis.com/css2?family=Teko:wght@400;600;700&family=Inter:wght@400;500;600&display=swap"
+		rel="stylesheet">
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.1/css/all.css">
+
 	<style>
+		:root {
+			--pitch-green: #10b981;
+			/* Emerald 500 */
+			--pitch-dark: #064e3b;
+			/* Emerald 900 */
+			--night-sky: #0f172a;
+			/* Slate 900 */
+			--glass-bg: rgba(15, 23, 42, 0.85);
+			--glass-border: rgba(16, 185, 129, 0.3);
+			--text-main: #f8fafc;
+			--text-muted: #94a3b8;
+		}
 
-body{
-	margin: 0;
-	padding: 0;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	min-height: 100vh;
-	font-family: 'Jost', sans-serif;
-	background: linear-gradient(to bottom, #0f0c29, #302b63, #24243e);
-}
-.main{
-	width: 350px;
-	height: 500px;
-	background-color: #4e4e4e !important;
-	overflow: hidden;
-	border-radius: 10px;
-	box-shadow: 5px 20px 50px #000;
-}
-#chk{
-	display: none;
-}
-.signup{
-	position: relative;
-	width:100%;
-	height: 100%;
-}
-label{
-	color: #fff;
-	font-size: 2.3em;
-	justify-content: center;
-	display: flex;
-	margin: 40px;
-	font-weight: bold;
-	cursor: pointer;
-	transition: .5s ease-in-out;
-}
-input{
-	width: 60%;
-	height: 20px;
-	background: #e0dede;
-	justify-content: center;
-	display: flex;
-	margin: 20px auto;
-	padding: 10px;
-	border: none;
-	outline: none;
-	border-radius: 5px;
-}
-button{
-	width: 60%;
-	height: 40px;
-	margin: 10px auto;
-	justify-content: center;
-	display: block;
-	color: #fff;
-	background: black;
-	font-size: 1em;
-	font-weight: bold;
-	margin-top: 20px;
-	outline: none;
-	border: none;
-	border-radius: 5px;
-	transition: .2s ease-in;
-	cursor: pointer;
-}
-button:hover{
-	background: rgba(0,0,0,0.5);
-}
-.login{
-	height: 460px;
-	background: #eee;
-	border-radius: 60% / 10%;
-	transform: translateY(-180px);
-	transition: .8s ease-in-out;
-}
-.login label{
-	color: #573b8a;
-	transform: scale(.6);
-}
+		body {
+			margin: 0;
+			padding: 0;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			min-height: 100vh;
+			font-family: 'Inter', sans-serif;
+			background: url('/img/stadium-bg.png') no-repeat center center fixed;
+			background-size: cover;
+			overflow: hidden;
+		}
 
-#chk:checked ~ .login{
-	transform: translateY(-500px);
-}
-#chk:checked ~ .login label{
-	transform: scale(1);	
-}
-#chk:checked ~ .signup label{
-	transform: scale(.6);
-}
+		/* Dark Overlay */
+		body::before {
+			content: '';
+			position: absolute;
+			top: 0;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			background: rgba(2, 6, 23, 0.6);
+			/* Darker overlay */
+			backdrop-filter: blur(4px);
+			z-index: 0;
+		}
 
-	</style> 
+		.login-card {
+			position: relative;
+			z-index: 10;
+			width: 100%;
+			max-width: 400px;
+			background: var(--glass-bg);
+			border: 1px solid var(--glass-border);
+			border-radius: 16px;
+			padding: 2.5rem;
+			box-shadow: 0 0 50px rgba(0, 0, 0, 0.8), 0 0 20px rgba(16, 185, 129, 0.2);
+			text-align: center;
+		}
 
+		.brand-logo {
+			margin-bottom: 2rem;
+		}
+
+		.brand-logo i {
+			font-size: 3rem;
+			color: var(--pitch-green);
+			filter: drop-shadow(0 0 10px var(--pitch-green));
+		}
+
+		.brand-title {
+			font-family: 'Teko', sans-serif;
+			font-size: 2.5rem;
+			font-weight: 700;
+			color: var(--text-main);
+			text-transform: uppercase;
+			letter-spacing: 2px;
+			margin: 0;
+			line-height: 1;
+		}
+
+		.brand-subtitle {
+			color: var(--pitch-green);
+			font-size: 0.9rem;
+			text-transform: uppercase;
+			letter-spacing: 4px;
+			margin-top: 0.5rem;
+			font-weight: 600;
+		}
+
+		.form-group {
+			margin-bottom: 1.5rem;
+			text-align: left;
+		}
+
+		.form-label {
+			display: block;
+			color: var(--text-muted);
+			font-size: 0.8rem;
+			text-transform: uppercase;
+			letter-spacing: 1px;
+			margin-bottom: 0.5rem;
+			margin-left: 0.5rem;
+		}
+
+		.form-control {
+			width: 100%;
+			padding: 12px 16px;
+			/* Explicit padding */
+			box-sizing: border-box;
+			/* Crucial for preventing width overflow */
+			background: rgba(255, 255, 255, 0.05);
+			/* Very slight tint */
+			border: 1px solid rgba(255, 255, 255, 0.1);
+			border-radius: 8px;
+			/* Slightly nicer radius */
+			color: var(--text-main);
+			font-size: 1rem;
+			font-family: 'Inter', sans-serif;
+			outline: none;
+			transition: all 0.3s ease;
+		}
+
+		.form-control:focus {
+			border-color: var(--pitch-green);
+			background: rgba(16, 185, 129, 0.1);
+			/* Green tint on focus */
+			box-shadow: 0 0 15px rgba(16, 185, 129, 0.2);
+		}
+
+		.btn-login {
+			width: 100%;
+			padding: 14px;
+			background: linear-gradient(135deg, var(--pitch-green) 0%, var(--pitch-dark) 100%);
+			/* Gradient button */
+			border: none;
+			border-radius: 8px;
+			color: white;
+			font-family: 'Teko', sans-serif;
+			font-size: 1.5rem;
+			text-transform: uppercase;
+			letter-spacing: 2px;
+			cursor: pointer;
+			transition: all 0.3s ease;
+			margin-top: 1rem;
+		}
+
+		.btn-login:hover {
+			transform: translateY(-2px);
+			box-shadow: 0 10px 20px rgba(16, 185, 129, 0.3);
+			filter: brightness(1.1);
+		}
+
+		.invalid-feedback {
+			color: #ef4444;
+			/* Red 500 */
+			font-size: 0.875rem;
+			margin-top: 0.5rem;
+			display: block;
+		}
+
+		/* ReCaptcha Styling override */
+		.g-recaptcha {
+			transform: scale(0.9);
+			transform-origin: 0 0;
+			margin-bottom: 1rem;
+		}
+
+		/* Helper links */
+		.auth-links {
+			margin-top: 1.5rem;
+			font-size: 0.875rem;
+		}
+
+		.auth-links a {
+			color: var(--text-muted);
+			text-decoration: none;
+			transition: color 0.2s;
+		}
+
+		.auth-links a:hover {
+			color: var(--pitch-green);
+		}
+	</style>
 </head>
-<!--Coded with love by Mutiullah Samim-->
-<body style="background-image: url('assets/img/backgroud.png');background-size: cover;">
 
-<div class="main">  	
-		<!-- <input type="checkbox" id="chk" aria-hidden="true"> -->
+<body>
 
-			<div class="signup">
-				<form method="POST" action="{{ route('login') }}" class="p-2">
-				@csrf
-					<label aria-hidden="true">Login</label>
-					<div class="col-12">
-						<input id="name" type="text" placeholder="User" class="form-control @error('name') is-invalid @enderror" name="name" value="{{ old('name') }}" required autocomplete="name" autofocus>
-							@error('name')
-								<span class="invalid-feedback" role="alert">
-									<strong>{{ $message }}</strong>
-								</span>
-							@enderror
-					</div>
-					<div class="col-12">
-						<input id="password" type="password"  placeholder="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="current-password">
-							@error('password')
-									<span class="invalid-feedback" role="alert">
-										<strong>{{ $message }}</strong>
-									</span>
-							@enderror
-					</div>
-					<div class="col-md-6">
-							<!-- <div class="g-recaptcha" data-sitekey="6Lf8FuAlAAAAAHR02MO9sz2ISmXOjvGw7GXRm_Tc"></div> -->
-							{!! NoCaptcha::renderJs() !!}
-							{!! NoCaptcha::display() !!}
-							
-							@if($errors->has('g-recaptcha-response') )
-								<span class=" invalid-feedback" style="display:block;">
-								<strong>{{$errors->first('g-recaptcha-response')}}</strong>
-								</span>
-							@else
-								<span class="invalid-feedback" role="alert">
-									<strong>dsdsds</strong>
-								</span>
-							@endif
-						</div>
-					<button type="submit">Login</button>
-				</form>
+	<div class="login-card">
+		<div class="brand-logo">
+			<i class="fas fa-futbol"></i>
+			<h1 class="brand-title">Panel L'MATCH</h1>
+			<div class="brand-subtitle">Match Day Access</div>
+		</div>
+
+		<form method="POST" action="{{ route('login') }}">
+			@csrf
+
+			<div class="form-group">
+				<label class="form-label" for="name">Manager ID</label>
+				<input id="name" type="text" class="form-control" name="name" placeholder="Enter Username"
+					value="{{ old('name') }}" required autofocus>
+				@error('name')
+					<span class="invalid-feedback"><strong>{{ $message }}</strong></span>
+				@enderror
 			</div>
+
+			<div class="form-group">
+				<label class="form-label" for="password">Access Code</label>
+				<input id="password" type="password" class="form-control" name="password" placeholder="••••••••"
+					required>
+				@error('password')
+					<span class="invalid-feedback"><strong>{{ $message }}</strong></span>
+				@enderror
+			</div>
+
+			<div class="form-group">
+				{!! NoCaptcha::renderJs() !!}
+				{!! NoCaptcha::display() !!}
+				@if($errors->has('g-recaptcha-response'))
+					<span class="invalid-feedback">
+						<strong>{{$errors->first('g-recaptcha-response')}}</strong>
+					</span>
+				@endif
+			</div>
+
+			<button type="submit" class="btn-login">
+				Link Up Play
+			</button>
+
+			<div class="auth-links">
+				<!-- Optional links -->
+			</div>
+		</form>
 	</div>
 
-	
-	
 </body>
+
 </html>

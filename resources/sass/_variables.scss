@@ -1,22 +1,25 @@
 // Body
-$body-bg: #f8fafc;
+$body-bg: #0f172a; // Slate 900
+$body-color: #f8fafc; // Slate 50
 
 // Typography
-$font-family-sans-serif: 'Josefin Sans', sans-serif;
-$font-size-base: 0.9rem;
+$font-family-sans-serif: 'Inter', 'Josefin Sans', sans-serif;
+$font-size-base: 0.95rem;
 $line-height-base: 1.6;
 
 // Colors
-$blue: #3490dc;
-$indigo: #6574cd;
-$purple: #9561e2;
-$pink: #f66d9b;
-$red: #e3342f;
-$orange: #f6993f;
-$yellow: #ffed4a;
-$green: #38c172;
-$teal: #4dc0b5;
-$cyan: #6cb2eb;
+$blue: #3b82f6;
+$indigo: #6366f1;
+$purple: #a855f7;
+$pink: #ec4899;
+$red: #ef4444;
+$orange: #f97316;
+$yellow: #eab308;
+$green: #10b981; // Emerald 500
+$teal: #14b8a6;
+$cyan: #06b6d4;
+$slate-800: #1e293b;
+$slate-900: #0f172a;
 
 
 .blue-color{

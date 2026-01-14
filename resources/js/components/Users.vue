@@ -5,11 +5,7 @@
     .swal2-title{
         font-size: 1.125em !important;
     }
-    .item {
-        background: #EDE7F6;
-        margin: 2px;
-        padding: 5px;
-    }
+
 </style>
 
 <template>
@@ -38,7 +34,7 @@
                             <i class="fa fa-plus fa-fw"></i>
                             </button>
                         </div>
-                        <div class="container col-12 bg-white p-3 border mt-2" v-if="show_filter">
+                        <div class="container col-12 glass-table-container p-3 mt-2" v-if="show_filter">
                             <div class="row">
                                 <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 col-12 mb-2">
                                     <select class="form-control" v-model="filterVal" @change="filter()">
@@ -66,7 +62,7 @@
                                     v-bind:placeholder="trans('search')"
                                     />
                                     <div class="input-group-append" @click="getResults()">
-                                    <span class="input-group-text bg-success"><i class="fa fa-search"></i></span>
+                                    <span class="input-group-text bg-success border-0 text-white"><i class="fa fa-search"></i></span>
                                     </div>
                                 </div>
                             </div>
@@ -261,11 +257,7 @@
                             :checked="code.selected_bouquets.includes(bouquet)"
                             />
                             <i class="fa fa-arrows" style="float:right;"></i>
-                            <label :for="'bouquet_' + bouquet" v-for="name in pack.names" :key="name.id"
-                            ><span v-if="name.id == bouquet">{{
-                                name.bouquet_name
-                            }}</span>
-                            </label>
+                            <label :for="'bouquet_' + bouquet">{{ getBouquetName(bouquet, pack.names) }}</label>
                         </div>
                     </draggable>
                     <h3 v-if="pack.all_bouquets" style="display: block;width: 100%;background: rgb(103, 58, 183);color: white;padding: 5px 15px;border-radius: 20px;margin: 15px 5px;">Movies / Series</h3>
@@ -292,11 +284,7 @@
                         :checked="code.selected_bouquets.includes(bouquet)"
                         />
                         <i class="fa fa-arrows" style="float:right;"></i>
-                        <label :for="'bouquet_' + bouquet" v-for="name in pack.names" :key="name.id"
-                        ><span v-if="name.id == bouquet">{{
-                            name.bouquet_name
-                        }}</span>
-                        </label>
+                        <label :for="'bouquet_' + bouquet">{{ getBouquetName(bouquet, pack.names) }}</label>
                     </div>
                     </draggable>
                     <p class="error" v-if="errors.pack"> {{errors.pack}}</p>
@@ -576,6 +564,11 @@
     },
 
         methods: {
+            // Helper method to get bouquet name by ID
+            getBouquetName(bouquetId, names) {
+                const found = names.find(n => n.id == bouquetId);
+                return found ? found.bouquet_name : '';
+            },
 
             renewModal(number, package_id) {
                 this.codeRenew = number;
@@ -1455,14 +1448,8 @@
         },
 
          created() {
-            
-            this.getPack();
-            this.getResults(); 
-            Fire.$on('AfterCreate' , () => {
-                this.getResults(); 
-                this.getPack();
-            }); 
-        
+            // Event listener registration only
+            // API calls (getPack, getResults) are already in mounted()
         }
     }
 </script>

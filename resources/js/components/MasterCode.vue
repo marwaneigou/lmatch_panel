@@ -825,13 +825,7 @@
         },
 
          created() {
-          this.getPack();
-            this.ShowMasterCode(); 
-            Fire.$on('AfterCreate' , () => {
-                    this.ShowMasterCode();
-                    this.getPack();
-                });    
-        
+            // Event listener only - API calls already in mounted()
         }
     }
 </script>
