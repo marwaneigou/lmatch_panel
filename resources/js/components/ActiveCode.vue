@@ -100,20 +100,35 @@
               <tr v-for="code in codes.data" :key="code.id">
 
                 <td
+                  class="text-center"
                   :style="[
                     code.enabled == 0 ? { 'background-color': '#dee2e6' } : '',
                   ]"
                   v-if="code.online == 0"
                 >
-                  <img src="/assets/img/offline.png" style="width: 27px;" alt="Offline">
+                  <!-- Offline SVG (Wi-Fi) -->
+                  <svg class="status-svg status-offline" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M1 9L12 2L23 9" stroke="#ef4444" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M4 12L12 5.5L20 12" stroke="#ef4444" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M7.5 15L12 11L16.5 15" stroke="#ef4444" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <circle cx="12" cy="19" r="1.5" fill="#ef4444"/>
+                    <line x1="4" y1="20" x2="20" y2="4" stroke="#ef4444" stroke-width="2.5" stroke-linecap="round"/>
+                  </svg>
                 </td>
                 <td
+                  class="text-center"
                   :style="[
                     code.enabled == 0 ? { 'background-color': '#dee2e6' } : '',
                   ]"
                   v-else
                 >
-                  <img src="/assets/img/online.png" style="width: 27px;" alt="Online">
+                  <!-- Online SVG (Wi-Fi) -->
+                  <svg class="status-svg status-online" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M1 9L12 2L23 9" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M4 12L12 5.5L20 12" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M7.5 15L12 11L16.5 15" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <circle cx="12" cy="19" r="1.5" fill="#22c55e"/>
+                  </svg>
                 </td>
                 <td
                   :style="[

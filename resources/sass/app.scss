@@ -843,3 +843,52 @@ table.table td>a[title] {
     pointer-events: none;
   }
 }
+
+// -----------------------------------------------------------------------------
+// Status Icons (Premium Animations)
+// -----------------------------------------------------------------------------
+@keyframes status-pulse {
+  0% {
+    transform: scale(0.95);
+    opacity: 0.7;
+    stroke-width: 2px;
+  }
+
+  100% {
+    transform: scale(1.4);
+    opacity: 0;
+    stroke-width: 0px;
+  }
+}
+
+.status-svg {
+  vertical-align: middle;
+  transition: all 0.3s ease;
+
+  // Enhance the dot with a glow
+  .status-dot {
+    transition: all 0.3s ease;
+  }
+
+  &.status-online {
+    .status-dot {
+      fill: #10b981;
+      filter: drop-shadow(0 0 6px rgba(16, 185, 129, 0.4));
+    }
+
+    .status-ring {
+      stroke: #10b981;
+      transform-origin: center;
+      animation: status-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+  }
+
+  &.status-offline {
+    .status-dot {
+      fill: #64748b; // Slate 500
+    }
+
+    // Slight transparency for offline to make it recede
+    opacity: 0.8;
+  }
+}

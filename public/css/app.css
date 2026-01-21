@@ -25197,3 +25197,68 @@ table.table td > a[title]:hover::after {
   pointer-events: none;
 }
 
+@-webkit-keyframes status-pulse {
+  0% {
+    -webkit-transform: scale(0.95);
+            transform: scale(0.95);
+    opacity: 0.7;
+    stroke-width: 2px;
+  }
+
+  100% {
+    -webkit-transform: scale(1.4);
+            transform: scale(1.4);
+    opacity: 0;
+    stroke-width: 0px;
+  }
+}
+
+@keyframes status-pulse {
+  0% {
+    -webkit-transform: scale(0.95);
+            transform: scale(0.95);
+    opacity: 0.7;
+    stroke-width: 2px;
+  }
+
+  100% {
+    -webkit-transform: scale(1.4);
+            transform: scale(1.4);
+    opacity: 0;
+    stroke-width: 0px;
+  }
+}
+
+.status-svg {
+  vertical-align: middle;
+  -webkit-transition: all 0.3s ease;
+  transition: all 0.3s ease;
+}
+
+.status-svg .status-dot {
+  -webkit-transition: all 0.3s ease;
+  transition: all 0.3s ease;
+}
+
+.status-svg.status-online .status-dot {
+  fill: #10b981;
+  -webkit-filter: drop-shadow(0 0 6px rgba(16, 185, 129, 0.4));
+          filter: drop-shadow(0 0 6px rgba(16, 185, 129, 0.4));
+}
+
+.status-svg.status-online .status-ring {
+  stroke: #10b981;
+  -webkit-transform-origin: center;
+          transform-origin: center;
+  -webkit-animation: status-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+          animation: status-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.status-svg.status-offline {
+  opacity: 0.8;
+}
+
+.status-svg.status-offline .status-dot {
+  fill: #64748b;
+}
+

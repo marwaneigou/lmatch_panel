@@ -167,9 +167,17 @@
 
 		/* ReCaptcha Styling override */
 		.g-recaptcha {
-			transform: scale(0.9);
-			transform-origin: 0 0;
+			transform: scale(1.0);
+			/* Reset scale to normal */
+			transform-origin: center;
 			margin-bottom: 1rem;
+			display: flex;
+			justify-content: center;
+		}
+
+		/* Ensure the parent container centers it */
+		.g-recaptcha>div {
+			margin: 0 auto;
 		}
 
 		/* Helper links */
@@ -220,7 +228,8 @@
 				@enderror
 			</div>
 
-			<div class="form-group">
+			<div class="form-group"
+				style="display: flex; justify-content: center; flex-direction: column; align-items: center;">
 				{!! NoCaptcha::renderJs() !!}
 				{!! NoCaptcha::display() !!}
 				@if($errors->has('g-recaptcha-response'))
