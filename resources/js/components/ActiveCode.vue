@@ -1626,7 +1626,7 @@ export default {
 
   created() {
     this.getPack();
-    this.getResults();
+
     Fire.$on("AfterCreate", () => {
       this.getResults();
       this.getPack();

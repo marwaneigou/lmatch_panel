@@ -3894,6 +3894,18 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   components: {
@@ -3983,13 +3995,6 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   methods: {
-    // Helper method to get bouquet name by ID
-    getBouquetName: function getBouquetName(bouquetId, names) {
-      var found = names.find(function (n) {
-        return n.id == bouquetId;
-      });
-      return found ? found.bouquet_name : '';
-    },
     renewModal: function renewModal(number, package_id) {
       this.codeRenew = number;
       this.packRenew = package_id;
@@ -4661,7 +4666,254 @@ __webpack_require__.r(__webpack_exports__);
       document.body.removeChild(el);
     }
   },
-  created: function created() {// Event listener only - API calls already in mounted()
+  created: function created() {
+    var _this14 = this;
+
+    this.getPack();
+    Fire.$on("AfterCreate", function () {
+      _this14.getResults();
+
+      _this14.getPack();
+    });
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/AdminTransactions.vue?vue&type=script&lang=js&":
+/*!****************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/AdminTransactions.vue?vue&type=script&lang=js& ***!
+  \****************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_0__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  data: function data() {
+    return {
+      items: {},
+      loading: false,
+      resellers: [],
+      showResellerDropdown: false,
+      resellerSearch: '',
+      filters: {
+        reseller_id: '',
+        action: '',
+        search: ''
+      },
+      actions: ['create', 'update', 'delete', 'enable', 'disable', 'renew', 'reset_mac', 'add_credit', 'recover_credit', 'block', 'unblock', 'transfer', 'change_days', 'vpn']
+    };
+  },
+  filters: {
+    formatDate: function formatDate(value) {
+      if (value) {
+        return moment__WEBPACK_IMPORTED_MODULE_0___default()(String(value)).format('YYYY-MM-DD HH:mm:ss');
+      }
+    }
+  },
+  computed: {
+    filteredResellers: function filteredResellers() {
+      if (!this.resellerSearch) {
+        return this.resellers;
+      }
+
+      var search = this.resellerSearch.toLowerCase();
+      return this.resellers.filter(function (res) {
+        return res.user.toLowerCase().includes(search);
+      });
+    },
+    selectedResellerName: function selectedResellerName() {
+      var _this = this;
+
+      if (!this.filters.reseller_id) {
+        return 'All Resellers';
+      }
+
+      var selected = this.resellers.find(function (res) {
+        return res.user_id == _this.filters.reseller_id;
+      });
+      return selected ? selected.user : 'Unknown Reseller';
+    }
+  },
+  mounted: function mounted() {
+    this.getpage();
+    this.fetchResellers();
+    document.addEventListener('click', this.closeDropdownOutside);
+  },
+  beforeDestroy: function beforeDestroy() {
+    document.removeEventListener('click', this.closeDropdownOutside);
+  },
+  methods: {
+    getpage: function getpage() {
+      var _this2 = this;
+
+      var page = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 1;
+      this.loading = true;
+      axios.post("code/transaction_logs?page=" + page, this.filters).then(function (response) {
+        _this2.items = response.data;
+        _this2.loading = false;
+      })["catch"](function (error) {
+        _this2.loading = false;
+        console.error(error);
+      });
+    },
+    fetchResellers: function fetchResellers() {
+      var _this3 = this;
+
+      axios.post("code/all_resellers").then(function (_ref) {
+        var data = _ref.data;
+        return _this3.resellers = data;
+      });
+    },
+    toggleResellerDropdown: function toggleResellerDropdown() {
+      var _this4 = this;
+
+      this.showResellerDropdown = !this.showResellerDropdown;
+
+      if (this.showResellerDropdown) {
+        this.$nextTick(function () {
+          _this4.$refs.resellerSearchInput.focus();
+        });
+      }
+    },
+    selectReseller: function selectReseller(res) {
+      this.filters.reseller_id = res ? res.user_id : '';
+      this.showResellerDropdown = false;
+      this.getpage();
+    },
+    closeDropdownOutside: function closeDropdownOutside(e) {
+      if (!this.$el.contains(e.target)) {
+        this.showResellerDropdown = false;
+      }
+    },
+    getActionClass: function getActionClass(action) {
+      switch (action) {
+        case 'create':
+          return 'badge-success';
+
+        case 'delete':
+          return 'badge-danger';
+
+        case 'disable':
+          return 'badge-danger';
+
+        case 'enable':
+          return 'badge-success';
+
+        case 'update':
+          return 'badge-info';
+
+        case 'renew':
+          return 'badge-primary';
+
+        case 'add_credit':
+          return 'badge-success';
+
+        case 'recover_credit':
+          return 'badge-warning';
+
+        default:
+          return 'badge-secondary';
+      }
+    }
   }
 });
 
@@ -6276,6 +6528,18 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   components: {
@@ -6359,13 +6623,6 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   methods: {
-    // Helper method to get bouquet name by ID
-    getBouquetName: function getBouquetName(bouquetId, names) {
-      var found = names.find(function (n) {
-        return n.id == bouquetId;
-      });
-      return found ? found.bouquet_name : '';
-    },
     renewModal: function renewModal(number, package_id) {
       this.codeRenew = number;
       this.packRenew = package_id;
@@ -6966,7 +7223,15 @@ __webpack_require__.r(__webpack_exports__);
       document.body.removeChild(el);
     }
   },
-  created: function created() {// Event listener only - API calls already in mounted()
+  created: function created() {
+    var _this13 = this;
+
+    this.getPack();
+    Fire.$on('AfterCreate', function () {
+      _this13.getResults();
+
+      _this13.getPack();
+    });
   }
 });
 
@@ -7718,7 +7983,16 @@ __webpack_require__.r(__webpack_exports__);
       });
     }
   },
-  created: function created() {// Event listener only - API calls already in mounted()
+  created: function created() {
+    var _this12 = this;
+
+    this.getPack();
+    this.ShowMasterCode();
+    Fire.$on('AfterCreate', function () {
+      _this12.ShowMasterCode();
+
+      _this12.getPack();
+    });
   }
 });
 
@@ -7737,6 +8011,18 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vuedraggable__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(vuedraggable__WEBPACK_IMPORTED_MODULE_0__);
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -8382,13 +8668,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     };
   },
   methods: {
-    // Helper method to get bouquet name by ID
-    getBouquetName: function getBouquetName(bouquetId, names) {
-      var found = names.find(function (n) {
-        return n.id == bouquetId;
-      });
-      return found ? found.bouquet_name : '';
-    },
     renewModal: function renewModal(number) {
       this.codeRenew = number;
       $("#renewModal").modal("show");
@@ -9143,7 +9422,14 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     }
   },
   created: function created() {
-    // Event listener only - API calls already in mounted()
+    var _this18 = this;
+
+    this.getPack();
+    Fire.$on('AfterCreate', function () {
+      _this18.getResults();
+
+      _this18.getPack();
+    });
     Fire.$on('createPdf', function () {
       $('#pdf').modal('show');
     });
@@ -10344,27 +10630,11 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   mounted: function mounted() {
     var _this = this;
 
-    this.getPack();
-    this.ShowUsers();
     Fire.$on('AfterCreate', function () {
       _this.ShowUsers();
 
@@ -10691,6 +10961,26 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     //------------------------------------------DELETE FUNCTION ----------------------------------\\
+    claimReseller: function claimReseller(id) {
+      Swal.fire({
+        title: 'Are you sure?',
+        text: "You will become the owner of this reseller!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, claim it!'
+      }).then(function (result) {
+        if (result.value) {
+          axios.post('code/claim_reseller/' + id).then(function () {
+            Swal.fire('Claimed!', 'You are now the owner.', 'success');
+            Fire.$emit('AfterCreate');
+          })["catch"](function () {
+            Swal.fire('Failed!', 'There was something wrong.', 'warning');
+          });
+        }
+      });
+    },
     DELETEResiler: function DELETEResiler(id) {
       Swal.fire({
         title: 'Are you sure?',
@@ -10716,10 +11006,10 @@ __webpack_require__.r(__webpack_exports__);
       $('#CreditRecharge').modal('show');
 
       if (this.userTypee == 'Admin') {
-        this.sld = user.solde;
-        this.sldTest = user.solde_test;
-        this.sldApp = user.solde_app;
-        this.gift = user.gift;
+        this.sld = 0;
+        this.sldTest = 0;
+        this.sldApp = 0;
+        this.gift = 0;
       } else {
         this.sld = 0;
         this.sldTest = 0;
@@ -10733,10 +11023,10 @@ __webpack_require__.r(__webpack_exports__);
       $('#CreditRecover').modal('show');
 
       if (this.userTypee == 'Admin') {
-        this.sld = user.solde;
-        this.sldTest = user.solde_test;
-        this.sldApp = user.solde_app;
-        this.gift = user.gift;
+        this.sld = 0;
+        this.sldTest = 0;
+        this.sldApp = 0;
+        this.gift = 0;
       } else {
         this.sld = 0;
         this.sldTest = 0;
@@ -10813,7 +11103,16 @@ __webpack_require__.r(__webpack_exports__);
       })["catch"](function (error) {});
     }
   },
-  created: function created() {// Event listener only - API calls already in mounted()
+  created: function created() {
+    var _this10 = this;
+
+    this.getPack();
+    this.ShowUsers();
+    Fire.$on('AfterCreate', function () {
+      _this10.ShowUsers();
+
+      _this10.getPack();
+    });
   }
 });
 
@@ -11419,6 +11718,18 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   components: {
@@ -11518,13 +11829,6 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   methods: {
-    // Helper method to get bouquet name by ID
-    getBouquetName: function getBouquetName(bouquetId, names) {
-      var found = names.find(function (n) {
-        return n.id == bouquetId;
-      });
-      return found ? found.bouquet_name : '';
-    },
     renewModal: function renewModal(number, package_id) {
       this.codeRenew = number;
       this.packRenew = package_id;
@@ -12318,8 +12622,15 @@ __webpack_require__.r(__webpack_exports__);
       });
     }
   },
-  created: function created() {// Event listener registration only
-    // API calls (getPack, getResults) are already in mounted()
+  created: function created() {
+    var _this16 = this;
+
+    this.getPack();
+    Fire.$on('AfterCreate', function () {
+      _this16.getResults();
+
+      _this16.getPack();
+    });
   }
 });
 
@@ -13856,81 +14167,6 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 //
 //
 //
@@ -37528,7 +37764,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.error {\n  color: #DC143C;\n}\n.swal2-title {\n  font-size: 1.125em !important;\n}\n\n", ""]);
+exports.push([module.i, "\n.error {\r\n  color: #DC143C;\n}\n.swal2-title {\r\n  font-size: 1.125em !important;\n}\n.item {\r\n  background: #EDE7F6;\r\n  margin: 2px;\r\n  padding: 5px;\n}\r\n", ""]);
 
 // exports
 
@@ -37585,7 +37821,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.error {\n    color: #DC143C;\n}\n.swal2-title{\n    font-size: 1.125em !important;\n}\n\n", ""]);
+exports.push([module.i, "\n.error {\n    color: #DC143C;\n}\n.swal2-title{\n    font-size: 1.125em !important;\n}\n.item {\n    background: #EDE7F6;\n    margin: 2px;\n    padding: 5px;\n}\n", ""]);
 
 // exports
 
@@ -37604,7 +37840,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.success{\n    margin-left: 216px!important;\n    color: forestgreen;\n}\n.swal2-title{\n    font-size: 1.125em !important;\n}\n\n", ""]);
+exports.push([module.i, "\n.success{\n    margin-left: 216px!important;\n    color: forestgreen;\n}\n.swal2-title{\n    font-size: 1.125em !important;\n}\n.item {\n    background: #EDE7F6;\n    margin: 2px;\n    padding: 5px;\n}\n", ""]);
 
 // exports
 
@@ -37642,7 +37878,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.error {\n    color: #DC143C;\n}\n.swal2-title{\n    font-size: 1.125em !important;\n}\n\n", ""]);
+exports.push([module.i, "\n.error {\n    color: #DC143C;\n}\n.swal2-title{\n    font-size: 1.125em !important;\n}\n.item {\n    background: #EDE7F6;\n    margin: 2px;\n    padding: 5px;\n}\n", ""]);
 
 // exports
 
@@ -37763,19 +37999,19 @@ exports.push([module.i, "\n#m3u_plus_active:focus {\r\n  border-color: white;\n}
 
 /***/ }),
 
-/***/ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/dashboard.vue?vue&type=style&index=0&id=57220a4e&scoped=true&lang=css&":
-/*!***************************************************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/dashboard.vue?vue&type=style&index=0&id=57220a4e&scoped=true&lang=css& ***!
-  \***************************************************************************************************************************************************************************************************************************************************************************************************/
+/***/ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/dashboard.vue?vue&type=style&index=0&lang=css&":
+/*!***************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/dashboard.vue?vue&type=style&index=0&lang=css& ***!
+  \***************************************************************************************************************************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loader/lib/css-base.js */ "./node_modules/css-loader/lib/css-base.js")(false);
 // imports
-exports.push([module.i, "@import url(https://fonts.googleapis.com/css2?family=Teko:wght@400;600&family=Inter:wght@400;500;700&display=swap);", ""]);
+
 
 // module
-exports.push([module.i, "\n.football-dashboard[data-v-57220a4e] {\r\n  font-family: 'Inter', sans-serif;\r\n  padding: 2rem;\r\n  /* Assuming a global dark bg via body, but enforcing transparency here */\n}\r\n\r\n/* Glass Table */\n.glass-table-container[data-v-57220a4e] {\r\n    background: rgba(15, 23, 42, 0.6);\r\n    border-radius: 16px;\r\n    border: 1px solid rgba(255,255,255,0.08);\r\n    overflow: hidden;\r\n    -webkit-backdrop-filter: blur(12px);\r\n            backdrop-filter: blur(12px);\r\n    box-shadow: 0 8px 32px rgba(0,0,0,0.3);\n}\r\n\r\n/* Typography */\n.section-title[data-v-57220a4e] {\r\n    font-family: 'Teko', sans-serif;\r\n    text-transform: uppercase;\r\n    letter-spacing: 1px;\r\n    font-size: 1.8rem;\r\n    border-left: 4px solid #10b981; /* Emerald */\r\n    padding-left: 1rem;\r\n    font-weight: 600;\r\n    text-shadow: 0 2px 10px rgba(0,0,0,0.5);\r\n    display: -webkit-box;\r\n    display: flex;\r\n    -webkit-box-align: center;\r\n            align-items: center;\n}\n.section-title i[data-v-57220a4e] {\r\n    color: #10b981;\r\n    margin-right: 10px;\r\n    -webkit-filter: drop-shadow(0 0 5px rgba(16,185,129,0.6));\r\n            filter: drop-shadow(0 0 5px rgba(16,185,129,0.6));\n}\r\n\r\n/* Premium Stat Cards - Flexbox Fallback */\n.stat-card[data-v-57220a4e] {\r\n    background: linear-gradient(145deg, rgba(30, 41, 59, 0.7) 0%, rgba(15, 23, 42, 0.85) 100%);\r\n    border: 1px solid rgba(255, 255, 255, 0.05);\r\n    border-radius: 14px;\r\n    padding: 1.5rem;\r\n    position: relative;\r\n    overflow: hidden;\r\n    -webkit-backdrop-filter: blur(10px);\r\n            backdrop-filter: blur(10px);\r\n    -webkit-transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);\r\n    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);\r\n    height: 100%;\r\n    \r\n    /* Flex Layout - Bulletproof */\r\n    display: -webkit-box;\r\n    display: flex;\r\n    flex-wrap: wrap; /* Allows wrapping */\r\n    -webkit-box-align: center;\r\n            align-items: center;\r\n    -webkit-box-pack: justify;\r\n            justify-content: space-between;\r\n    \r\n    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);\r\n    z-index: 1; /* Explicit z-index */\n}\n.stat-card[data-v-57220a4e]::before {\r\n    content: '';\r\n    position: absolute;\r\n    top: 0;\r\n    left: 0;\r\n    right: 0;\r\n    height: 1px;\r\n    background: -webkit-gradient(linear, left top, right top, from(transparent), color-stop(rgba(255,255,255,0.2)), to(transparent));\r\n    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);\r\n    z-index: 0;\n}\n.stat-card[data-v-57220a4e]:hover {\r\n    -webkit-transform: translateY(-5px) scale(1.01);\r\n            transform: translateY(-5px) scale(1.01);\r\n    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);\r\n    border-color: rgba(255, 255, 255, 0.2);\n}\r\n\r\n/* Card Variants with Glows */\n.card-emerald[data-v-57220a4e]:hover { box-shadow: 0 10px 30px -10px rgba(16, 185, 129, 0.3); border-color: rgba(16, 185, 129, 0.3);\n}\n.card-blue[data-v-57220a4e]:hover { box-shadow: 0 10px 30px -10px rgba(59, 130, 246, 0.3); border-color: rgba(59, 130, 246, 0.3);\n}\n.card-purple[data-v-57220a4e]:hover { box-shadow: 0 10px 30px -10px rgba(168, 85, 247, 0.3); border-color: rgba(168, 85, 247, 0.3);\n}\n.card-orange[data-v-57220a4e]:hover { box-shadow: 0 10px 30px -10px rgba(249, 115, 22, 0.3); border-color: rgba(249, 115, 22, 0.3);\n}\n.stat-icon[data-v-57220a4e] {\r\n    /* No Grid properties */\r\n    -webkit-box-flex: 0;\r\n            flex: 0 0 auto;\r\n    width: 60px;\r\n    height: 60px;\r\n    border-radius: 12px;\r\n    display: -webkit-box;\r\n    display: flex;\r\n    -webkit-box-align: center;\r\n            align-items: center;\r\n    -webkit-box-pack: center;\r\n            justify-content: center;\r\n    font-size: 1.8rem;\r\n    margin-right: 15px; /* Spacing */\r\n    background: rgba(255, 255, 255, 0.05); /* Slightly lighter for visibility */\r\n    border: 1px solid rgba(255, 255, 255, 0.1);\r\n    box-shadow: inset 0 0 15px rgba(0,0,0,0.2);\r\n    -webkit-transition: all 0.3s ease;\r\n    transition: all 0.3s ease;\r\n    z-index: 2;\r\n    position: relative; /* Ensure it's above background */\r\n    color: inherit; /* Inherit from card variant specific color */\n}\n.card-emerald .stat-icon[data-v-57220a4e] { color: #34d399 !important;\n}\n.card-blue .stat-icon[data-v-57220a4e] { color: #60a5fa !important;\n}\n.card-purple .stat-icon[data-v-57220a4e] { color: #c084fc !important;\n}\n.card-orange .stat-icon[data-v-57220a4e] { color: #fb923c !important;\n}\n.stat-card:hover .stat-icon[data-v-57220a4e] {\r\n    -webkit-transform: scale(1.1) rotate(5deg);\r\n            transform: scale(1.1) rotate(5deg);\r\n    background: rgba(255, 255, 255, 0.1);\n}\n.stat-content[data-v-57220a4e] {\r\n    /* Flex item taking remaining space */\r\n    -webkit-box-flex: 1;\r\n            flex: 1 1 auto;\r\n    text-align: right;\r\n    display: -webkit-box;\r\n    display: flex;\r\n    -webkit-box-orient: vertical;\r\n    -webkit-box-direction: normal;\r\n            flex-direction: column;\r\n    -webkit-box-pack: center;\r\n            justify-content: center;\r\n    z-index: 2;\r\n    position: relative;\r\n    min-width: 0; /* Prevent flex overflow */\n}\n.stat-value[data-v-57220a4e] {\r\n    font-family: 'Teko', sans-serif;\r\n    font-size: 3rem; /* Larger */\r\n    font-weight: 500;\r\n    color: #ffffff !important; /* Force White */\r\n    line-height: 0.9;\r\n    margin-bottom: 0px;\r\n    text-shadow: 0 2px 10px rgba(0,0,0,0.5); /* Stronger shadow */\n}\n.stat-label[data-v-57220a4e] {\r\n    text-transform: uppercase;\r\n    font-size: 0.85rem;\r\n    font-weight: 700;\r\n    color: #cbd5e1 !important; /* Lighter Slate */\r\n    letter-spacing: 1px;\r\n    margin-top: 4px;\n}\n.stat-action[data-v-57220a4e] {\r\n    grid-column: 1 / -1;\r\n    margin-top: 0.5rem;\r\n    padding: 0.5rem 0;\r\n    font-size: 0.9rem;\r\n    color: rgba(255,255,255,0.7);\r\n    text-transform: uppercase;\r\n    letter-spacing: 1px;\r\n    text-decoration: none;\r\n    display: -webkit-box;\r\n    display: flex;\r\n    -webkit-box-align: center;\r\n            align-items: center;\r\n    -webkit-transition: all 0.3s;\r\n    transition: all 0.3s;\r\n    font-weight: 600;\n}\n.stat-action i[data-v-57220a4e] {\r\n    margin-left: 0.5rem;\r\n    -webkit-transition: -webkit-transform 0.3s;\r\n    transition: -webkit-transform 0.3s;\r\n    transition: transform 0.3s;\r\n    transition: transform 0.3s, -webkit-transform 0.3s;\n}\n.stat-action[data-v-57220a4e]:hover {\r\n    color: #fff;\r\n    text-shadow: 0 0 10px rgba(255,255,255,0.3);\n}\n.stat-action:hover i[data-v-57220a4e] {\r\n    -webkit-transform: translateX(5px);\r\n            transform: translateX(5px);\n}\r\n\r\n/* Mini Stats Redesign */\n.mini-stat-card[data-v-57220a4e] {\r\n    background: rgba(30, 41, 59, 0.4);\r\n    border: 1px solid rgba(255,255,255,0.05);\r\n    border-radius: 12px;\r\n    padding: 1.25rem;\r\n    display: -webkit-box;\r\n    display: flex;\r\n    -webkit-box-align: center;\r\n            align-items: center;\r\n    position: relative;\r\n    -webkit-backdrop-filter: blur(8px);\r\n            backdrop-filter: blur(8px);\r\n    -webkit-transition: all 0.3s ease;\r\n    transition: all 0.3s ease;\n}\n.mini-stat-card[data-v-57220a4e]:hover {\r\n    background: rgba(30, 41, 59, 0.6);\r\n    border-color: rgba(255,255,255,0.1);\r\n    -webkit-transform: translateY(-3px);\r\n            transform: translateY(-3px);\n}\n.mini-icon[data-v-57220a4e] {\r\n    width: 48px;\r\n    height: 48px;\r\n    background: linear-gradient(135deg, #1e293b, #0f172a);\r\n    color: #10b981;\r\n    border-radius: 12px;\r\n    display: -webkit-box;\r\n    display: flex;\r\n    -webkit-box-align: center;\r\n            align-items: center;\r\n    -webkit-box-pack: center;\r\n            justify-content: center;\r\n    margin-right: 1.2rem;\r\n    box-shadow: 0 4px 6px rgba(0,0,0,0.2);\r\n    border: 1px solid rgba(255,255,255,0.05);\n}\n.mini-info h4[data-v-57220a4e] {\r\n    font-family: 'Teko', sans-serif;\r\n    font-size: 1.8rem;\r\n    color: #fff;\r\n    margin: 0;\r\n    line-height: 1;\n}\n.mini-info p[data-v-57220a4e] {\r\n    font-size: 0.75rem;\r\n    text-transform: uppercase;\r\n    letter-spacing: 1px;\r\n    color: #cbd5e1;\r\n    margin: 0;\n}\r\n/* Players Grid */\n.player-grid[data-v-57220a4e] {\r\n    gap: 1.5rem;\n}\n.player-item img[data-v-57220a4e] {\r\n    max-width: 100px;\r\n    -webkit-transition: -webkit-transform 0.3s ease, -webkit-filter 0.3s ease;\r\n    transition: -webkit-transform 0.3s ease, -webkit-filter 0.3s ease;\r\n    transition: transform 0.3s ease, filter 0.3s ease;\r\n    transition: transform 0.3s ease, filter 0.3s ease, -webkit-transform 0.3s ease, -webkit-filter 0.3s ease;\r\n    -webkit-filter: brightness(0.8) grayscale(0.5);\r\n            filter: brightness(0.8) grayscale(0.5);\r\n    border-radius: 8px;\n}\n.player-item:hover img[data-v-57220a4e] {\r\n    -webkit-transform: scale(1.1);\r\n            transform: scale(1.1);\r\n    -webkit-filter: brightness(1) grayscale(0);\r\n            filter: brightness(1) grayscale(0);\n}\n.player-glow img[data-v-57220a4e] {\r\n     -webkit-filter: drop-shadow(0 0 15px rgba(16, 185, 129, 0.5));\r\n             filter: drop-shadow(0 0 15px rgba(16, 185, 129, 0.5));\n}\r\n", ""]);
+exports.push([module.i, "\n.dbox {\r\n    position: relative;\r\n    background: rgb(255, 86, 65);\r\n    background: -webkit-gradient(linear, left top, left bottom, from(rgba(255, 86, 65, 1)), to(rgba(253, 50, 97, 1)));\r\n    background: linear-gradient(to bottom, rgba(255, 86, 65, 1) 0%, rgba(253, 50, 97, 1) 100%);\r\n    filter: progid: DXImageTransform.Microsoft.gradient( startColorstr='#ff5641', endColorstr='#fd3261', GradientType=0);\r\n    border-radius: 4px;\r\n    text-align: center;\r\n    margin: 60px 0 50px;\n}\n.dbox__icon {\r\n    position: absolute;\r\n    -webkit-transform: translateY(-50%) translateX(-50%);\r\n            transform: translateY(-50%) translateX(-50%);\r\n    left: 50%;\n}\n.dbox__icon:before {\r\n    width: 75px;\r\n    height: 75px;\r\n    position: absolute;\r\n    background: #fda299;\r\n    background: rgba(253, 162, 153, 0.34);\r\n    content: '';\r\n    border-radius: 50%;\r\n    left: -17px;\r\n    top: -17px;\r\n    z-index: -2;\n}\n.dbox__icon:after {\r\n    width: 60px;\r\n    height: 60px;\r\n    position: absolute;\r\n    background: #f79489;\r\n    background: rgba(247, 148, 137, 0.91);\r\n    content: '';\r\n    border-radius: 50%;\r\n    left: -10px;\r\n    top: -10px;\r\n    z-index: -1;\n}\n.dbox__icon > i {\r\n    background: #ff5444;\r\n    border-radius: 50%;\r\n    line-height: 40px;\r\n    color: #FFF;\r\n    width: 40px;\r\n    height: 40px;\r\n\tfont-size:22px;\n}\n.dbox__body {\r\n    padding: 50px 20px;\n}\n.dbox__count {\r\n    display: block;\r\n    font-size: 30px;\r\n    color: #FFF;\r\n    font-weight: 300;\n}\n.dbox__title {\r\n    font-size: 13px;\r\n    color: #FFF;\r\n    color: rgba(255, 255, 255, 0.81);\n}\n.dbox__action {\r\n    -webkit-transform: translateY(-50%) translateX(-50%);\r\n            transform: translateY(-50%) translateX(-50%);\r\n    position: absolute;\r\n    left: 50%;\n}\n.dbox__action__btn {\r\n    border: none;\r\n    background: #FFF;\r\n    border-radius: 19px;\r\n    padding: 7px 16px;\r\n    text-transform: uppercase;\r\n    font-weight: 500;\r\n    font-size: 11px;\r\n    letter-spacing: .5px;\r\n    color: #003e85;\r\n    box-shadow: 0 3px 5px #d4d4d4;\n}\n.dbox--color-2 {\r\n    background: rgb(252, 190, 27);\r\n    background: -webkit-gradient(linear, left top, left bottom, color-stop(1%, rgba(252, 190, 27, 1)), color-stop(99%, rgba(248, 86, 72, 1)));\r\n    background: linear-gradient(to bottom, rgba(252, 190, 27, 1) 1%, rgba(248, 86, 72, 1) 99%);\r\n    filter: progid: DXImageTransform.Microsoft.gradient( startColorstr='#fcbe1b', endColorstr='#f85648', GradientType=0);\n}\n.dbox--color-2 .dbox__icon:after {\r\n    background: #fee036;\r\n    background: rgba(254, 224, 54, 0.81);\n}\n.dbox--color-2 .dbox__icon:before {\r\n    background: #fee036;\r\n    background: rgba(254, 224, 54, 0.64);\n}\n.dbox--color-2 .dbox__icon > i {\r\n    background: #fb9f28;\n}\n.dbox--color-3 {\r\n    background: rgb(183,71,247);\r\n    background: -webkit-gradient(linear, left top, left bottom, from(rgba(183,71,247,1)),to(rgba(108,83,220,1)));\r\n    background: linear-gradient(to bottom, rgba(183,71,247,1) 0%,rgba(108,83,220,1) 100%);\r\n    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#b747f7', endColorstr='#6c53dc',GradientType=0 );\n}\n.dbox--color-3 .dbox__icon:after {\r\n    background: #b446f5;\r\n    background: rgba(180, 70, 245, 0.76);\n}\n.dbox--color-3 .dbox__icon:before {\r\n    background: #e284ff;\r\n    background: rgba(226, 132, 255, 0.66);\n}\n.dbox--color-3 .dbox__icon > i {\r\n    background: #8150e4;\n}\r\n", ""]);
 
 // exports
 
@@ -108183,15 +108419,15 @@ if(false) {}
 
 /***/ }),
 
-/***/ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/dashboard.vue?vue&type=style&index=0&id=57220a4e&scoped=true&lang=css&":
-/*!*******************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/style-loader!./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/dashboard.vue?vue&type=style&index=0&id=57220a4e&scoped=true&lang=css& ***!
-  \*******************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/***/ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/dashboard.vue?vue&type=style&index=0&lang=css&":
+/*!*******************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/style-loader!./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/dashboard.vue?vue&type=style&index=0&lang=css& ***!
+  \*******************************************************************************************************************************************************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 
-var content = __webpack_require__(/*! !../../../node_modules/css-loader??ref--6-1!../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../node_modules/postcss-loader/src??ref--6-2!../../../node_modules/vue-loader/lib??vue-loader-options!./dashboard.vue?vue&type=style&index=0&id=57220a4e&scoped=true&lang=css& */ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/dashboard.vue?vue&type=style&index=0&id=57220a4e&scoped=true&lang=css&");
+var content = __webpack_require__(/*! !../../../node_modules/css-loader??ref--6-1!../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../node_modules/postcss-loader/src??ref--6-2!../../../node_modules/vue-loader/lib??vue-loader-options!./dashboard.vue?vue&type=style&index=0&lang=css& */ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/dashboard.vue?vue&type=style&index=0&lang=css&");
 
 if(typeof content === 'string') content = [[module.i, content, '']];
 
@@ -164543,8 +164779,7 @@ var render = function() {
                 ? _c(
                     "div",
                     {
-                      staticClass:
-                        "container col-12 glass-table-container p-3 mt-2"
+                      staticClass: "container col-12 bg-white p-3 border mt-2"
                     },
                     [
                       _c("div", { staticClass: "row" }, [
@@ -166092,69 +166327,78 @@ var render = function() {
                             index
                           ) {
                             return _vm.pack.live.includes(bouquet)
-                              ? _c("div", { key: index, staticClass: "item" }, [
-                                  !_vm.editmode
-                                    ? _c("input", {
-                                        staticClass: "pr-2",
-                                        attrs: {
-                                          type: "checkbox",
-                                          id: "bouquet_" + bouquet,
-                                          name: "bouquet_" + bouquet,
-                                          checked: ""
-                                        },
-                                        domProps: { value: bouquet },
-                                        on: {
-                                          change: function($event) {
-                                            return _vm.onCheck(
-                                              bouquet,
-                                              _vm.pack
-                                            )
+                              ? _c(
+                                  "div",
+                                  { key: index, staticClass: "item" },
+                                  [
+                                    !_vm.editmode
+                                      ? _c("input", {
+                                          staticClass: "pr-2",
+                                          attrs: {
+                                            type: "checkbox",
+                                            id: "bouquet_" + bouquet,
+                                            name: "bouquet_" + bouquet,
+                                            checked: ""
+                                          },
+                                          domProps: { value: bouquet },
+                                          on: {
+                                            change: function($event) {
+                                              return _vm.onCheck(
+                                                bouquet,
+                                                _vm.pack
+                                              )
+                                            }
                                           }
-                                        }
-                                      })
-                                    : _c("input", {
-                                        staticClass: "pr-2",
-                                        attrs: {
-                                          type: "checkbox",
-                                          id: "bouquet_" + bouquet,
-                                          name: "bouquet_" + bouquet
-                                        },
-                                        domProps: {
-                                          value: bouquet,
-                                          checked: _vm.code.selected_bouquets.includes(
-                                            bouquet
-                                          )
-                                        },
-                                        on: {
-                                          change: function($event) {
-                                            return _vm.onCheck(
-                                              bouquet,
-                                              _vm.pack
+                                        })
+                                      : _c("input", {
+                                          staticClass: "pr-2",
+                                          attrs: {
+                                            type: "checkbox",
+                                            id: "bouquet_" + bouquet,
+                                            name: "bouquet_" + bouquet
+                                          },
+                                          domProps: {
+                                            value: bouquet,
+                                            checked: _vm.code.selected_bouquets.includes(
+                                              bouquet
                                             )
+                                          },
+                                          on: {
+                                            change: function($event) {
+                                              return _vm.onCheck(
+                                                bouquet,
+                                                _vm.pack
+                                              )
+                                            }
                                           }
-                                        }
-                                      }),
-                                  _vm._v(" "),
-                                  _c("i", {
-                                    staticClass: "fa fa-arrows",
-                                    staticStyle: { float: "right" }
-                                  }),
-                                  _vm._v(" "),
-                                  _c(
-                                    "label",
-                                    { attrs: { for: "bouquet_" + bouquet } },
-                                    [
-                                      _vm._v(
-                                        _vm._s(
-                                          _vm.getBouquetName(
-                                            bouquet,
-                                            _vm.pack.names
-                                          )
-                                        )
+                                        }),
+                                    _vm._v(" "),
+                                    _c("i", {
+                                      staticClass: "fa fa-arrows",
+                                      staticStyle: { float: "right" }
+                                    }),
+                                    _vm._v(" "),
+                                    _vm._l(_vm.pack.names, function(name) {
+                                      return _c(
+                                        "label",
+                                        {
+                                          key: name.id,
+                                          attrs: { for: "bouquet_" + bouquet }
+                                        },
+                                        [
+                                          name.id == bouquet
+                                            ? _c("span", [
+                                                _vm._v(
+                                                  _vm._s(name.bouquet_name)
+                                                )
+                                              ])
+                                            : _vm._e()
+                                        ]
                                       )
-                                    ]
-                                  )
-                                ])
+                                    })
+                                  ],
+                                  2
+                                )
                               : _vm._e()
                           }),
                           0
@@ -166200,69 +166444,78 @@ var render = function() {
                             index
                           ) {
                             return _vm.pack.live.includes(bouquet) == false
-                              ? _c("div", { key: index, staticClass: "item" }, [
-                                  !_vm.editmode
-                                    ? _c("input", {
-                                        staticClass: "pr-2",
-                                        attrs: {
-                                          type: "checkbox",
-                                          id: "bouquet_" + bouquet,
-                                          name: "bouquet_" + bouquet,
-                                          checked: ""
-                                        },
-                                        domProps: { value: bouquet },
-                                        on: {
-                                          change: function($event) {
-                                            return _vm.onCheck(
-                                              bouquet,
-                                              _vm.pack
-                                            )
+                              ? _c(
+                                  "div",
+                                  { key: index, staticClass: "item" },
+                                  [
+                                    !_vm.editmode
+                                      ? _c("input", {
+                                          staticClass: "pr-2",
+                                          attrs: {
+                                            type: "checkbox",
+                                            id: "bouquet_" + bouquet,
+                                            name: "bouquet_" + bouquet,
+                                            checked: ""
+                                          },
+                                          domProps: { value: bouquet },
+                                          on: {
+                                            change: function($event) {
+                                              return _vm.onCheck(
+                                                bouquet,
+                                                _vm.pack
+                                              )
+                                            }
                                           }
-                                        }
-                                      })
-                                    : _c("input", {
-                                        staticClass: "pr-2",
-                                        attrs: {
-                                          type: "checkbox",
-                                          id: "bouquet_" + bouquet,
-                                          name: "bouquet_" + bouquet
-                                        },
-                                        domProps: {
-                                          value: bouquet,
-                                          checked: _vm.code.selected_bouquets.includes(
-                                            bouquet
-                                          )
-                                        },
-                                        on: {
-                                          change: function($event) {
-                                            return _vm.onCheck(
-                                              bouquet,
-                                              _vm.pack
+                                        })
+                                      : _c("input", {
+                                          staticClass: "pr-2",
+                                          attrs: {
+                                            type: "checkbox",
+                                            id: "bouquet_" + bouquet,
+                                            name: "bouquet_" + bouquet
+                                          },
+                                          domProps: {
+                                            value: bouquet,
+                                            checked: _vm.code.selected_bouquets.includes(
+                                              bouquet
                                             )
+                                          },
+                                          on: {
+                                            change: function($event) {
+                                              return _vm.onCheck(
+                                                bouquet,
+                                                _vm.pack
+                                              )
+                                            }
                                           }
-                                        }
-                                      }),
-                                  _vm._v(" "),
-                                  _c("i", {
-                                    staticClass: "fa fa-arrows",
-                                    staticStyle: { float: "right" }
-                                  }),
-                                  _vm._v(" "),
-                                  _c(
-                                    "label",
-                                    { attrs: { for: "bouquet_" + bouquet } },
-                                    [
-                                      _vm._v(
-                                        _vm._s(
-                                          _vm.getBouquetName(
-                                            bouquet,
-                                            _vm.pack.names
-                                          )
-                                        )
+                                        }),
+                                    _vm._v(" "),
+                                    _c("i", {
+                                      staticClass: "fa fa-arrows",
+                                      staticStyle: { float: "right" }
+                                    }),
+                                    _vm._v(" "),
+                                    _vm._l(_vm.pack.names, function(name) {
+                                      return _c(
+                                        "label",
+                                        {
+                                          key: name.id,
+                                          attrs: { for: "bouquet_" + bouquet }
+                                        },
+                                        [
+                                          name.id == bouquet
+                                            ? _c("span", [
+                                                _vm._v(
+                                                  _vm._s(name.bouquet_name)
+                                                )
+                                              ])
+                                            : _vm._e()
+                                        ]
                                       )
-                                    ]
-                                  )
-                                ])
+                                    })
+                                  ],
+                                  2
+                                )
                               : _vm._e()
                           }),
                           0
@@ -166861,11 +167114,9 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c(
-      "span",
-      { staticClass: "input-group-text bg-success border-0 text-white" },
-      [_c("i", { staticClass: "fa fa-search" })]
-    )
+    return _c("span", { staticClass: "input-group-text bg-success" }, [
+      _c("i", { staticClass: "fa fa-search" })
+    ])
   },
   function() {
     var _vm = this
@@ -166942,6 +167193,395 @@ render._withStripped = true
 
 /***/ }),
 
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/AdminTransactions.vue?vue&type=template&id=2791252e&":
+/*!********************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/AdminTransactions.vue?vue&type=template&id=2791252e& ***!
+  \********************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "container-fluid" }, [
+    _c("div", { staticClass: "row mb-4" }, [
+      _c("div", { staticClass: "col-md-12" }, [
+        _c("div", { staticClass: "card" }, [
+          _c("div", { staticClass: "card-header" }, [
+            _c("div", { staticClass: "row" }, [
+              _vm._m(0),
+              _vm._v(" "),
+              _c("div", { staticClass: "col-md-3" }, [
+                _c(
+                  "div",
+                  {
+                    staticClass: "dropdown",
+                    class: { show: _vm.showResellerDropdown }
+                  },
+                  [
+                    _c(
+                      "button",
+                      {
+                        staticClass:
+                          "btn btn-light dropdown-toggle form-control text-left",
+                        attrs: { type: "button" },
+                        on: { click: _vm.toggleResellerDropdown }
+                      },
+                      [
+                        _vm._v(
+                          "\n                      " +
+                            _vm._s(_vm.selectedResellerName) +
+                            "\n                  "
+                        )
+                      ]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      {
+                        staticClass: "dropdown-menu w-100 p-2",
+                        class: { show: _vm.showResellerDropdown }
+                      },
+                      [
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.resellerSearch,
+                              expression: "resellerSearch"
+                            }
+                          ],
+                          ref: "resellerSearchInput",
+                          staticClass: "form-control mb-2",
+                          attrs: {
+                            type: "text",
+                            placeholder: "Search reseller..."
+                          },
+                          domProps: { value: _vm.resellerSearch },
+                          on: {
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.resellerSearch = $event.target.value
+                            }
+                          }
+                        }),
+                        _vm._v(" "),
+                        _c(
+                          "div",
+                          {
+                            staticStyle: {
+                              "max-height": "250px",
+                              "overflow-y": "auto"
+                            }
+                          },
+                          [
+                            _c(
+                              "a",
+                              {
+                                staticClass: "dropdown-item",
+                                attrs: { href: "#" },
+                                on: {
+                                  click: function($event) {
+                                    $event.preventDefault()
+                                    return _vm.selectReseller("")
+                                  }
+                                }
+                              },
+                              [_vm._v("All Resellers")]
+                            ),
+                            _vm._v(" "),
+                            _vm._l(_vm.filteredResellers, function(res) {
+                              return _c(
+                                "a",
+                                {
+                                  key: res.user_id,
+                                  staticClass: "dropdown-item",
+                                  attrs: { href: "#" },
+                                  on: {
+                                    click: function($event) {
+                                      $event.preventDefault()
+                                      return _vm.selectReseller(res)
+                                    }
+                                  }
+                                },
+                                [
+                                  _vm._v(
+                                    "\n                               " +
+                                      _vm._s(res.user) +
+                                      "\n                           "
+                                  )
+                                ]
+                              )
+                            })
+                          ],
+                          2
+                        )
+                      ]
+                    )
+                  ]
+                )
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "col-md-3" }, [
+                _c(
+                  "select",
+                  {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.filters.action,
+                        expression: "filters.action"
+                      }
+                    ],
+                    staticClass: "form-control",
+                    on: {
+                      change: [
+                        function($event) {
+                          var $$selectedVal = Array.prototype.filter
+                            .call($event.target.options, function(o) {
+                              return o.selected
+                            })
+                            .map(function(o) {
+                              var val = "_value" in o ? o._value : o.value
+                              return val
+                            })
+                          _vm.$set(
+                            _vm.filters,
+                            "action",
+                            $event.target.multiple
+                              ? $$selectedVal
+                              : $$selectedVal[0]
+                          )
+                        },
+                        function($event) {
+                          return _vm.getpage()
+                        }
+                      ]
+                    }
+                  },
+                  [
+                    _c("option", { attrs: { value: "" } }, [
+                      _vm._v("All Actions")
+                    ]),
+                    _vm._v(" "),
+                    _vm._l(_vm.actions, function(act) {
+                      return _c(
+                        "option",
+                        { key: act, domProps: { value: act } },
+                        [_vm._v(_vm._s(act))]
+                      )
+                    })
+                  ],
+                  2
+                )
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "col-md-3" }, [
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.filters.search,
+                      expression: "filters.search"
+                    }
+                  ],
+                  staticClass: "form-control",
+                  attrs: { type: "text", placeholder: "Search..." },
+                  domProps: { value: _vm.filters.search },
+                  on: {
+                    keyup: function($event) {
+                      if (
+                        !$event.type.indexOf("key") &&
+                        _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")
+                      ) {
+                        return null
+                      }
+                      return _vm.getpage()
+                    },
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.$set(_vm.filters, "search", $event.target.value)
+                    }
+                  }
+                })
+              ])
+            ])
+          ]),
+          _vm._v(" "),
+          _c(
+            "div",
+            {
+              staticClass: "card-body table-responsive p-0",
+              on: {
+                click: function($event) {
+                  _vm.showResellerDropdown = false
+                }
+              }
+            },
+            [
+              _c("table", { staticClass: "table table-hover text-nowrap" }, [
+                _vm._m(1),
+                _vm._v(" "),
+                _c(
+                  "tbody",
+                  [
+                    _vm.loading
+                      ? _c("tr", [_vm._m(2)])
+                      : _vm._l(_vm.items.data, function(item) {
+                          return _c("tr", { key: item.id }, [
+                            _c("td", [_vm._v(_vm._s(item.id))]),
+                            _vm._v(" "),
+                            _c("td", [
+                              _vm._v(
+                                _vm._s(
+                                  item.reseller
+                                    ? item.reseller.name
+                                    : item.reseller_id
+                                )
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c("td", [
+                              _c(
+                                "span",
+                                {
+                                  staticClass: "badge",
+                                  class: _vm.getActionClass(item.action)
+                                },
+                                [_vm._v(_vm._s(item.action))]
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c("td", [_vm._v(_vm._s(item.target_type))]),
+                            _vm._v(" "),
+                            _c("td", [_vm._v(_vm._s(item.target_id))]),
+                            _vm._v(" "),
+                            _c("td", [_vm._v(_vm._s(item.details))]),
+                            _vm._v(" "),
+                            _c("td", [_vm._v(_vm._s(item.amount))]),
+                            _vm._v(" "),
+                            _c("td", [
+                              item.old_balance !== null
+                                ? _c("span", [
+                                    _vm._v(
+                                      "\n                      " +
+                                        _vm._s(item.old_balance) +
+                                        " "
+                                    ),
+                                    _c("i", {
+                                      staticClass: "fa fa-arrow-right"
+                                    }),
+                                    _vm._v(
+                                      " " +
+                                        _vm._s(item.new_balance) +
+                                        "\n                  "
+                                    )
+                                  ])
+                                : _vm._e()
+                            ]),
+                            _vm._v(" "),
+                            _c("td", [_vm._v(_vm._s(item.ip))]),
+                            _vm._v(" "),
+                            _c("td", [
+                              _vm._v(
+                                _vm._s(_vm._f("formatDate")(item.created_at))
+                              )
+                            ])
+                          ])
+                        })
+                  ],
+                  2
+                )
+              ])
+            ]
+          ),
+          _vm._v(" "),
+          _c(
+            "div",
+            { staticClass: "card-footer" },
+            [
+              _c("vue-paginate-al", {
+                attrs: {
+                  totalPage: _vm.items ? _vm.items.last_page : 1,
+                  activeBGColor: "success",
+                  withNextPrev: false
+                },
+                on: { btnClick: _vm.getpage }
+              })
+            ],
+            1
+          )
+        ])
+      ])
+    ])
+  ])
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-md-3" }, [
+      _c("h5", [_vm._v("Transaction Logs")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("thead", [
+      _c("tr", [
+        _c("th", [_vm._v("ID")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Reseller")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Action")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Target Type")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Target ID")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Details")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Amount")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Balance (Old -> New)")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("IP")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Date")])
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("td", { staticClass: "text-center", attrs: { colspan: "10" } }, [
+      _c("div", { staticClass: "spinner-border", attrs: { role: "status" } }, [
+        _c("span", { staticClass: "sr-only" }, [_vm._v("Loading...")])
+      ])
+    ])
+  }
+]
+render._withStripped = true
+
+
+
+/***/ }),
+
 /***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Category.vue?vue&type=template&id=33972369&":
 /*!***********************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/Category.vue?vue&type=template&id=33972369& ***!
@@ -167000,51 +167640,57 @@ var render = function() {
                 ? _c(
                     "div",
                     {
-                      staticClass:
-                        "container col-12 glass-table-container p-3 mt-2"
+                      staticClass: "container col-12 bg-white p-3 border mt-2"
                     },
                     [
                       _c("div", { staticClass: "row" }, [
-                        _c("div", { staticClass: "input-group col-12 mb-2" }, [
-                          _c("input", {
-                            directives: [
-                              {
-                                name: "model",
-                                rawName: "v-model",
-                                value: _vm.searchQuery,
-                                expression: "searchQuery"
-                              }
-                            ],
-                            staticClass: "form-control",
-                            attrs: {
-                              type: "text",
-                              name: "search",
-                              placeholder: _vm.trans("search")
-                            },
-                            domProps: { value: _vm.searchQuery },
-                            on: {
-                              input: function($event) {
-                                if ($event.target.composing) {
-                                  return
+                        _c(
+                          "div",
+                          {
+                            staticClass:
+                              "input-group col-lg-4 col-md-4 col-sm-12 col-xs-12 col-12 mb-2"
+                          },
+                          [
+                            _c("input", {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: _vm.searchQuery,
+                                  expression: "searchQuery"
                                 }
-                                _vm.searchQuery = $event.target.value
-                              }
-                            }
-                          }),
-                          _vm._v(" "),
-                          _c(
-                            "div",
-                            {
-                              staticClass: "input-group-append",
+                              ],
+                              staticClass: "form-control",
+                              attrs: {
+                                type: "text",
+                                name: "search",
+                                placeholder: _vm.trans("search")
+                              },
+                              domProps: { value: _vm.searchQuery },
                               on: {
-                                click: function($event) {
-                                  return _vm.getResults()
+                                input: function($event) {
+                                  if ($event.target.composing) {
+                                    return
+                                  }
+                                  _vm.searchQuery = $event.target.value
                                 }
                               }
-                            },
-                            [_vm._m(0)]
-                          )
-                        ])
+                            }),
+                            _vm._v(" "),
+                            _c(
+                              "div",
+                              {
+                                staticClass: "input-group-append",
+                                on: {
+                                  click: function($event) {
+                                    return _vm.getResults()
+                                  }
+                                }
+                              },
+                              [_vm._m(0)]
+                            )
+                          ]
+                        )
                       ])
                     ]
                   )
@@ -167429,11 +168075,9 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c(
-      "span",
-      { staticClass: "input-group-text bg-success border-0 text-white" },
-      [_c("i", { staticClass: "fa fa-search" })]
-    )
+    return _c("span", { staticClass: "input-group-text bg-success" }, [
+      _c("i", { staticClass: "fa fa-search" })
+    ])
   },
   function() {
     var _vm = this
@@ -167527,51 +168171,57 @@ var render = function() {
                 ? _c(
                     "div",
                     {
-                      staticClass:
-                        "container col-12 glass-table-container p-3 mt-2"
+                      staticClass: "container col-12 bg-white p-3 border mt-2"
                     },
                     [
                       _c("div", { staticClass: "row" }, [
-                        _c("div", { staticClass: "input-group col-12 mb-2" }, [
-                          _c("input", {
-                            directives: [
-                              {
-                                name: "model",
-                                rawName: "v-model",
-                                value: _vm.searchQuery,
-                                expression: "searchQuery"
-                              }
-                            ],
-                            staticClass: "form-control",
-                            attrs: {
-                              type: "text",
-                              name: "search",
-                              placeholder: _vm.trans("search")
-                            },
-                            domProps: { value: _vm.searchQuery },
-                            on: {
-                              input: function($event) {
-                                if ($event.target.composing) {
-                                  return
+                        _c(
+                          "div",
+                          {
+                            staticClass:
+                              "input-group col-lg-4 col-md-4 col-sm-12 col-xs-12 col-12 mb-2"
+                          },
+                          [
+                            _c("input", {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: _vm.searchQuery,
+                                  expression: "searchQuery"
                                 }
-                                _vm.searchQuery = $event.target.value
-                              }
-                            }
-                          }),
-                          _vm._v(" "),
-                          _c(
-                            "div",
-                            {
-                              staticClass: "input-group-append",
+                              ],
+                              staticClass: "form-control",
+                              attrs: {
+                                type: "text",
+                                name: "search",
+                                placeholder: _vm.trans("search")
+                              },
+                              domProps: { value: _vm.searchQuery },
                               on: {
-                                click: function($event) {
-                                  return _vm.getResults()
+                                input: function($event) {
+                                  if ($event.target.composing) {
+                                    return
+                                  }
+                                  _vm.searchQuery = $event.target.value
                                 }
                               }
-                            },
-                            [_vm._m(0)]
-                          )
-                        ])
+                            }),
+                            _vm._v(" "),
+                            _c(
+                              "div",
+                              {
+                                staticClass: "input-group-append",
+                                on: {
+                                  click: function($event) {
+                                    return _vm.getResults()
+                                  }
+                                }
+                              },
+                              [_vm._m(0)]
+                            )
+                          ]
+                        )
                       ])
                     ]
                   )
@@ -168040,11 +168690,9 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c(
-      "span",
-      { staticClass: "input-group-text bg-success border-0 text-white" },
-      [_c("i", { staticClass: "fa fa-search" })]
-    )
+    return _c("span", { staticClass: "input-group-text bg-success" }, [
+      _c("i", { staticClass: "fa fa-search" })
+    ])
   },
   function() {
     var _vm = this
@@ -168617,8 +169265,7 @@ var render = function() {
                 ? _c(
                     "div",
                     {
-                      staticClass:
-                        "container col-12 glass-table-container p-3 mt-2"
+                      staticClass: "container col-12 bg-white p-3 border mt-2"
                     },
                     [
                       _c("div", { staticClass: "row" }, [
@@ -169632,69 +170279,78 @@ var render = function() {
                             index
                           ) {
                             return _vm.pack.live.includes(bouquet)
-                              ? _c("div", { key: index, staticClass: "item" }, [
-                                  !_vm.editmode
-                                    ? _c("input", {
-                                        staticClass: "pr-2",
-                                        attrs: {
-                                          type: "checkbox",
-                                          id: "bouquet_" + bouquet,
-                                          name: "bouquet_" + bouquet,
-                                          checked: ""
-                                        },
-                                        domProps: { value: bouquet },
-                                        on: {
-                                          change: function($event) {
-                                            return _vm.onCheck(
-                                              bouquet,
-                                              _vm.pack
-                                            )
+                              ? _c(
+                                  "div",
+                                  { key: index, staticClass: "item" },
+                                  [
+                                    !_vm.editmode
+                                      ? _c("input", {
+                                          staticClass: "pr-2",
+                                          attrs: {
+                                            type: "checkbox",
+                                            id: "bouquet_" + bouquet,
+                                            name: "bouquet_" + bouquet,
+                                            checked: ""
+                                          },
+                                          domProps: { value: bouquet },
+                                          on: {
+                                            change: function($event) {
+                                              return _vm.onCheck(
+                                                bouquet,
+                                                _vm.pack
+                                              )
+                                            }
                                           }
-                                        }
-                                      })
-                                    : _c("input", {
-                                        staticClass: "pr-2",
-                                        attrs: {
-                                          type: "checkbox",
-                                          id: "bouquet_" + bouquet,
-                                          name: "bouquet_" + bouquet
-                                        },
-                                        domProps: {
-                                          value: bouquet,
-                                          checked: _vm.code.selected_bouquets.includes(
-                                            bouquet
-                                          )
-                                        },
-                                        on: {
-                                          change: function($event) {
-                                            return _vm.onCheck(
-                                              bouquet,
-                                              _vm.pack
+                                        })
+                                      : _c("input", {
+                                          staticClass: "pr-2",
+                                          attrs: {
+                                            type: "checkbox",
+                                            id: "bouquet_" + bouquet,
+                                            name: "bouquet_" + bouquet
+                                          },
+                                          domProps: {
+                                            value: bouquet,
+                                            checked: _vm.code.selected_bouquets.includes(
+                                              bouquet
                                             )
+                                          },
+                                          on: {
+                                            change: function($event) {
+                                              return _vm.onCheck(
+                                                bouquet,
+                                                _vm.pack
+                                              )
+                                            }
                                           }
-                                        }
-                                      }),
-                                  _vm._v(" "),
-                                  _c("i", {
-                                    staticClass: "fa fa-arrows",
-                                    staticStyle: { float: "right" }
-                                  }),
-                                  _vm._v(" "),
-                                  _c(
-                                    "label",
-                                    { attrs: { for: "bouquet_" + bouquet } },
-                                    [
-                                      _vm._v(
-                                        _vm._s(
-                                          _vm.getBouquetName(
-                                            bouquet,
-                                            _vm.pack.names
-                                          )
-                                        )
+                                        }),
+                                    _vm._v(" "),
+                                    _c("i", {
+                                      staticClass: "fa fa-arrows",
+                                      staticStyle: { float: "right" }
+                                    }),
+                                    _vm._v(" "),
+                                    _vm._l(_vm.pack.names, function(name) {
+                                      return _c(
+                                        "label",
+                                        {
+                                          key: name.id,
+                                          attrs: { for: "bouquet_" + bouquet }
+                                        },
+                                        [
+                                          name.id == bouquet
+                                            ? _c("span", [
+                                                _vm._v(
+                                                  _vm._s(name.bouquet_name)
+                                                )
+                                              ])
+                                            : _vm._e()
+                                        ]
                                       )
-                                    ]
-                                  )
-                                ])
+                                    })
+                                  ],
+                                  2
+                                )
                               : _vm._e()
                           }),
                           0
@@ -169740,69 +170396,78 @@ var render = function() {
                             index
                           ) {
                             return _vm.pack.live.includes(bouquet) == false
-                              ? _c("div", { key: index, staticClass: "item" }, [
-                                  !_vm.editmode
-                                    ? _c("input", {
-                                        staticClass: "pr-2",
-                                        attrs: {
-                                          type: "checkbox",
-                                          id: "bouquet_" + bouquet,
-                                          name: "bouquet_" + bouquet,
-                                          checked: ""
-                                        },
-                                        domProps: { value: bouquet },
-                                        on: {
-                                          change: function($event) {
-                                            return _vm.onCheck(
-                                              bouquet,
-                                              _vm.pack
-                                            )
+                              ? _c(
+                                  "div",
+                                  { key: index, staticClass: "item" },
+                                  [
+                                    !_vm.editmode
+                                      ? _c("input", {
+                                          staticClass: "pr-2",
+                                          attrs: {
+                                            type: "checkbox",
+                                            id: "bouquet_" + bouquet,
+                                            name: "bouquet_" + bouquet,
+                                            checked: ""
+                                          },
+                                          domProps: { value: bouquet },
+                                          on: {
+                                            change: function($event) {
+                                              return _vm.onCheck(
+                                                bouquet,
+                                                _vm.pack
+                                              )
+                                            }
                                           }
-                                        }
-                                      })
-                                    : _c("input", {
-                                        staticClass: "pr-2",
-                                        attrs: {
-                                          type: "checkbox",
-                                          id: "bouquet_" + bouquet,
-                                          name: "bouquet_" + bouquet
-                                        },
-                                        domProps: {
-                                          value: bouquet,
-                                          checked: _vm.code.selected_bouquets.includes(
-                                            bouquet
-                                          )
-                                        },
-                                        on: {
-                                          change: function($event) {
-                                            return _vm.onCheck(
-                                              bouquet,
-                                              _vm.pack
+                                        })
+                                      : _c("input", {
+                                          staticClass: "pr-2",
+                                          attrs: {
+                                            type: "checkbox",
+                                            id: "bouquet_" + bouquet,
+                                            name: "bouquet_" + bouquet
+                                          },
+                                          domProps: {
+                                            value: bouquet,
+                                            checked: _vm.code.selected_bouquets.includes(
+                                              bouquet
                                             )
+                                          },
+                                          on: {
+                                            change: function($event) {
+                                              return _vm.onCheck(
+                                                bouquet,
+                                                _vm.pack
+                                              )
+                                            }
                                           }
-                                        }
-                                      }),
-                                  _vm._v(" "),
-                                  _c("i", {
-                                    staticClass: "fa fa-arrows",
-                                    staticStyle: { float: "right" }
-                                  }),
-                                  _vm._v(" "),
-                                  _c(
-                                    "label",
-                                    { attrs: { for: "bouquet_" + bouquet } },
-                                    [
-                                      _vm._v(
-                                        _vm._s(
-                                          _vm.getBouquetName(
-                                            bouquet,
-                                            _vm.pack.names
-                                          )
-                                        )
+                                        }),
+                                    _vm._v(" "),
+                                    _c("i", {
+                                      staticClass: "fa fa-arrows",
+                                      staticStyle: { float: "right" }
+                                    }),
+                                    _vm._v(" "),
+                                    _vm._l(_vm.pack.names, function(name) {
+                                      return _c(
+                                        "label",
+                                        {
+                                          key: name.id,
+                                          attrs: { for: "bouquet_" + bouquet }
+                                        },
+                                        [
+                                          name.id == bouquet
+                                            ? _c("span", [
+                                                _vm._v(
+                                                  _vm._s(name.bouquet_name)
+                                                )
+                                              ])
+                                            : _vm._e()
+                                        ]
                                       )
-                                    ]
-                                  )
-                                ])
+                                    })
+                                  ],
+                                  2
+                                )
                               : _vm._e()
                           }),
                           0
@@ -170483,11 +171148,9 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c(
-      "span",
-      { staticClass: "input-group-text bg-success border-0 text-white" },
-      [_c("i", { staticClass: "fa fa-search" })]
-    )
+    return _c("span", { staticClass: "input-group-text bg-success" }, [
+      _c("i", { staticClass: "fa fa-search" })
+    ])
   },
   function() {
     var _vm = this
@@ -172046,8 +172709,7 @@ var render = function() {
                 ? _c(
                     "div",
                     {
-                      staticClass:
-                        "container col-12 glass-table-container p-3 mt-2"
+                      staticClass: "container col-12 bg-white p-3 border mt-2"
                     },
                     [
                       _c("div", { staticClass: "row" }, [
@@ -173524,69 +174186,78 @@ var render = function() {
                             index
                           ) {
                             return _vm.pack.live.includes(bouquet)
-                              ? _c("div", { key: index, staticClass: "item" }, [
-                                  !_vm.editmode
-                                    ? _c("input", {
-                                        staticClass: "pr-2",
-                                        attrs: {
-                                          type: "checkbox",
-                                          id: "bouquet_" + bouquet,
-                                          name: "bouquet_" + bouquet,
-                                          checked: ""
-                                        },
-                                        domProps: { value: bouquet },
-                                        on: {
-                                          change: function($event) {
-                                            return _vm.onCheck(
-                                              bouquet,
-                                              _vm.pack
-                                            )
+                              ? _c(
+                                  "div",
+                                  { key: index, staticClass: "item" },
+                                  [
+                                    !_vm.editmode
+                                      ? _c("input", {
+                                          staticClass: "pr-2",
+                                          attrs: {
+                                            type: "checkbox",
+                                            id: "bouquet_" + bouquet,
+                                            name: "bouquet_" + bouquet,
+                                            checked: ""
+                                          },
+                                          domProps: { value: bouquet },
+                                          on: {
+                                            change: function($event) {
+                                              return _vm.onCheck(
+                                                bouquet,
+                                                _vm.pack
+                                              )
+                                            }
                                           }
-                                        }
-                                      })
-                                    : _c("input", {
-                                        staticClass: "pr-2",
-                                        attrs: {
-                                          type: "checkbox",
-                                          id: "bouquet_" + bouquet,
-                                          name: "bouquet_" + bouquet
-                                        },
-                                        domProps: {
-                                          value: bouquet,
-                                          checked: _vm.code.selected_bouquets.includes(
-                                            bouquet
-                                          )
-                                        },
-                                        on: {
-                                          change: function($event) {
-                                            return _vm.onCheck(
-                                              bouquet,
-                                              _vm.pack
+                                        })
+                                      : _c("input", {
+                                          staticClass: "pr-2",
+                                          attrs: {
+                                            type: "checkbox",
+                                            id: "bouquet_" + bouquet,
+                                            name: "bouquet_" + bouquet
+                                          },
+                                          domProps: {
+                                            value: bouquet,
+                                            checked: _vm.code.selected_bouquets.includes(
+                                              bouquet
                                             )
+                                          },
+                                          on: {
+                                            change: function($event) {
+                                              return _vm.onCheck(
+                                                bouquet,
+                                                _vm.pack
+                                              )
+                                            }
                                           }
-                                        }
-                                      }),
-                                  _vm._v(" "),
-                                  _c("i", {
-                                    staticClass: "fa fa-arrows",
-                                    staticStyle: { float: "right" }
-                                  }),
-                                  _vm._v(" "),
-                                  _c(
-                                    "label",
-                                    { attrs: { for: "bouquet_" + bouquet } },
-                                    [
-                                      _vm._v(
-                                        _vm._s(
-                                          _vm.getBouquetName(
-                                            bouquet,
-                                            _vm.pack.names
-                                          )
-                                        )
+                                        }),
+                                    _vm._v(" "),
+                                    _c("i", {
+                                      staticClass: "fa fa-arrows",
+                                      staticStyle: { float: "right" }
+                                    }),
+                                    _vm._v(" "),
+                                    _vm._l(_vm.pack.names, function(name) {
+                                      return _c(
+                                        "label",
+                                        {
+                                          key: name.id,
+                                          attrs: { for: "bouquet_" + bouquet }
+                                        },
+                                        [
+                                          name.id == bouquet
+                                            ? _c("span", [
+                                                _vm._v(
+                                                  _vm._s(name.bouquet_name)
+                                                )
+                                              ])
+                                            : _vm._e()
+                                        ]
                                       )
-                                    ]
-                                  )
-                                ])
+                                    })
+                                  ],
+                                  2
+                                )
                               : _vm._e()
                           }),
                           0
@@ -173632,69 +174303,78 @@ var render = function() {
                             index
                           ) {
                             return _vm.pack.live.includes(bouquet) == false
-                              ? _c("div", { key: index, staticClass: "item" }, [
-                                  !_vm.editmode
-                                    ? _c("input", {
-                                        staticClass: "pr-2",
-                                        attrs: {
-                                          type: "checkbox",
-                                          id: "bouquet_" + bouquet,
-                                          name: "bouquet_" + bouquet,
-                                          checked: ""
-                                        },
-                                        domProps: { value: bouquet },
-                                        on: {
-                                          change: function($event) {
-                                            return _vm.onCheck(
-                                              bouquet,
-                                              _vm.pack
-                                            )
+                              ? _c(
+                                  "div",
+                                  { key: index, staticClass: "item" },
+                                  [
+                                    !_vm.editmode
+                                      ? _c("input", {
+                                          staticClass: "pr-2",
+                                          attrs: {
+                                            type: "checkbox",
+                                            id: "bouquet_" + bouquet,
+                                            name: "bouquet_" + bouquet,
+                                            checked: ""
+                                          },
+                                          domProps: { value: bouquet },
+                                          on: {
+                                            change: function($event) {
+                                              return _vm.onCheck(
+                                                bouquet,
+                                                _vm.pack
+                                              )
+                                            }
                                           }
-                                        }
-                                      })
-                                    : _c("input", {
-                                        staticClass: "pr-2",
-                                        attrs: {
-                                          type: "checkbox",
-                                          id: "bouquet_" + bouquet,
-                                          name: "bouquet_" + bouquet
-                                        },
-                                        domProps: {
-                                          value: bouquet,
-                                          checked: _vm.code.selected_bouquets.includes(
-                                            bouquet
-                                          )
-                                        },
-                                        on: {
-                                          change: function($event) {
-                                            return _vm.onCheck(
-                                              bouquet,
-                                              _vm.pack
+                                        })
+                                      : _c("input", {
+                                          staticClass: "pr-2",
+                                          attrs: {
+                                            type: "checkbox",
+                                            id: "bouquet_" + bouquet,
+                                            name: "bouquet_" + bouquet
+                                          },
+                                          domProps: {
+                                            value: bouquet,
+                                            checked: _vm.code.selected_bouquets.includes(
+                                              bouquet
                                             )
+                                          },
+                                          on: {
+                                            change: function($event) {
+                                              return _vm.onCheck(
+                                                bouquet,
+                                                _vm.pack
+                                              )
+                                            }
                                           }
-                                        }
-                                      }),
-                                  _vm._v(" "),
-                                  _c("i", {
-                                    staticClass: "fa fa-arrows",
-                                    staticStyle: { float: "right" }
-                                  }),
-                                  _vm._v(" "),
-                                  _c(
-                                    "label",
-                                    { attrs: { for: "bouquet_" + bouquet } },
-                                    [
-                                      _vm._v(
-                                        _vm._s(
-                                          _vm.getBouquetName(
-                                            bouquet,
-                                            _vm.pack.names
-                                          )
-                                        )
+                                        }),
+                                    _vm._v(" "),
+                                    _c("i", {
+                                      staticClass: "fa fa-arrows",
+                                      staticStyle: { float: "right" }
+                                    }),
+                                    _vm._v(" "),
+                                    _vm._l(_vm.pack.names, function(name) {
+                                      return _c(
+                                        "label",
+                                        {
+                                          key: name.id,
+                                          attrs: { for: "bouquet_" + bouquet }
+                                        },
+                                        [
+                                          name.id == bouquet
+                                            ? _c("span", [
+                                                _vm._v(
+                                                  _vm._s(name.bouquet_name)
+                                                )
+                                              ])
+                                            : _vm._e()
+                                        ]
                                       )
-                                    ]
-                                  )
-                                ])
+                                    })
+                                  ],
+                                  2
+                                )
                               : _vm._e()
                           }),
                           0
@@ -174476,11 +175156,9 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c(
-      "span",
-      { staticClass: "input-group-text bg-success border-0 text-white" },
-      [_c("i", { staticClass: "fa fa-search" })]
-    )
+    return _c("span", { staticClass: "input-group-text bg-success" }, [
+      _c("i", { staticClass: "fa fa-search" })
+    ])
   },
   function() {
     var _vm = this
@@ -175686,159 +176364,10 @@ var render = function() {
                 ? _c(
                     "div",
                     {
-                      staticClass:
-                        "container col-12 glass-table-container p-3 mt-2"
+                      staticClass: "container col-12 bg-white p-3 border mt-2"
                     },
                     [
                       _c("div", { staticClass: "row" }, [
-                        _c(
-                          "div",
-                          {
-                            staticClass:
-                              "col-lg-4 col-md-4 col-sm-12 col-xs-12 col-12 mb-2"
-                          },
-                          [
-                            _c(
-                              "select",
-                              {
-                                directives: [
-                                  {
-                                    name: "model",
-                                    rawName: "v-model",
-                                    value: _vm.filterVal,
-                                    expression: "filterVal"
-                                  }
-                                ],
-                                staticClass: "form-control",
-                                on: {
-                                  change: [
-                                    function($event) {
-                                      var $$selectedVal = Array.prototype.filter
-                                        .call($event.target.options, function(
-                                          o
-                                        ) {
-                                          return o.selected
-                                        })
-                                        .map(function(o) {
-                                          var val =
-                                            "_value" in o ? o._value : o.value
-                                          return val
-                                        })
-                                      _vm.filterVal = $event.target.multiple
-                                        ? $$selectedVal
-                                        : $$selectedVal[0]
-                                    },
-                                    function($event) {
-                                      return _vm.filter()
-                                    }
-                                  ]
-                                }
-                              },
-                              [
-                                _c(
-                                  "option",
-                                  { attrs: { value: "0", selected: "" } },
-                                  [_vm._v(_vm._s(_vm.trans("all_items")))]
-                                ),
-                                _vm._v(" "),
-                                _c("option", { attrs: { value: "1" } }, [
-                                  _vm._v(_vm._s(_vm.trans("expired")))
-                                ]),
-                                _vm._v(" "),
-                                _c("option", { attrs: { value: "2" } }, [
-                                  _vm._v(_vm._s(_vm.trans("online")))
-                                ]),
-                                _vm._v(" "),
-                                _c("option", { attrs: { value: "3" } }, [
-                                  _vm._v(_vm._s(_vm.trans("alm_expired")))
-                                ]),
-                                _vm._v(" "),
-                                _c("option", { attrs: { value: "4" } }, [
-                                  _vm._v(_vm._s(_vm.trans("trial")))
-                                ]),
-                                _vm._v(" "),
-                                _c("option", { attrs: { value: "5" } }, [
-                                  _vm._v(_vm._s(_vm.trans("disabled")))
-                                ]),
-                                _vm._v(" "),
-                                _c("option", { attrs: { value: "6" } }, [
-                                  _vm._v(_vm._s(_vm.trans("enabled")))
-                                ])
-                              ]
-                            )
-                          ]
-                        ),
-                        _vm._v(" "),
-                        _c(
-                          "div",
-                          {
-                            staticClass:
-                              "col-lg-4 col-md-4 col-sm-12 col-xs-12 col-12 mb-2"
-                          },
-                          [
-                            _c(
-                              "select",
-                              {
-                                directives: [
-                                  {
-                                    name: "model",
-                                    rawName: "v-model",
-                                    value: _vm.byUser,
-                                    expression: "byUser"
-                                  }
-                                ],
-                                staticClass: "form-control",
-                                on: {
-                                  change: [
-                                    function($event) {
-                                      var $$selectedVal = Array.prototype.filter
-                                        .call($event.target.options, function(
-                                          o
-                                        ) {
-                                          return o.selected
-                                        })
-                                        .map(function(o) {
-                                          var val =
-                                            "_value" in o ? o._value : o.value
-                                          return val
-                                        })
-                                      _vm.byUser = $event.target.multiple
-                                        ? $$selectedVal
-                                        : $$selectedVal[0]
-                                    },
-                                    function($event) {
-                                      return _vm.showResDet()
-                                    }
-                                  ]
-                                }
-                              },
-                              [
-                                _c("option", { attrs: { value: "" } }, [
-                                  _vm._v(_vm._s(_vm.trans("all")))
-                                ]),
-                                _vm._v(" "),
-                                _vm._l(_vm.resllers, function(res) {
-                                  return res.user
-                                    ? _c(
-                                        "option",
-                                        {
-                                          key: res.user_id,
-                                          domProps: { value: res.user_id }
-                                        },
-                                        [
-                                          _vm._v(
-                                            _vm._s(res.user ? res.user : "")
-                                          )
-                                        ]
-                                      )
-                                    : _vm._e()
-                                })
-                              ],
-                              2
-                            )
-                          ]
-                        ),
-                        _vm._v(" "),
                         _c(
                           "div",
                           {
@@ -175915,9 +176444,7 @@ var render = function() {
                   _vm._v(" "),
                   _c("th", [_vm._v(_vm._s(_vm.trans("recharge")))]),
                   _vm._v(" "),
-                  _vm.userTypee != "Admin"
-                    ? _c("th", [_vm._v(_vm._s(_vm.trans("recover_crd")))])
-                    : _vm._e(),
+                  _c("th", [_vm._v(_vm._s(_vm.trans("recover_crd")))]),
                   _vm._v(" "),
                   _c("th", [_vm._v(_vm._s(_vm.trans("type")))]),
                   _vm._v(" "),
@@ -176004,29 +176531,27 @@ var render = function() {
                         )
                       ]),
                       _vm._v(" "),
-                      _vm.userTypee != "Admin"
-                        ? _c("td", [
-                            _c(
-                              "button",
-                              {
-                                staticClass: "btn btn-primary",
-                                attrs: { type: "button" },
-                                on: {
-                                  click: function($event) {
-                                    return _vm.recoverSolde(user)
-                                  }
-                                }
-                              },
-                              [
-                                _vm._v(
-                                  "\n                                    " +
-                                    _vm._s(_vm.trans("recover")) +
-                                    "\n                                "
-                                )
-                              ]
+                      _c("td", [
+                        _c(
+                          "button",
+                          {
+                            staticClass: "btn btn-primary",
+                            attrs: { type: "button" },
+                            on: {
+                              click: function($event) {
+                                return _vm.recoverSolde(user)
+                              }
+                            }
+                          },
+                          [
+                            _vm._v(
+                              "\n                                    " +
+                                _vm._s(_vm.trans("recover")) +
+                                "\n                                "
                             )
-                          ])
-                        : _vm._e(),
+                          ]
+                        )
+                      ]),
                       _vm._v(" "),
                       _c("td", [_vm._v(_vm._s(user.type))]),
                       _vm._v(" "),
@@ -176118,6 +176643,26 @@ var render = function() {
                             })
                           ]
                         ),
+                        _vm._v(" "),
+                        _vm.$userType === "Admin"
+                          ? _c(
+                              "a",
+                              {
+                                attrs: { title: "Claim Ownership" },
+                                on: {
+                                  click: function($event) {
+                                    return _vm.claimReseller(user.id)
+                                  }
+                                }
+                              },
+                              [
+                                _c("i", {
+                                  staticClass: "fa fa-user-plus mr-1",
+                                  staticStyle: { color: "green" }
+                                })
+                              ]
+                            )
+                          : _vm._e(),
                         _vm._v(" "),
                         _c(
                           "a",
@@ -177607,11 +178152,9 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c(
-      "span",
-      { staticClass: "input-group-text bg-success border-0 text-white" },
-      [_c("i", { staticClass: "fa fa-search" })]
-    )
+    return _c("span", { staticClass: "input-group-text bg-success" }, [
+      _c("i", { staticClass: "fa fa-search" })
+    ])
   },
   function() {
     var _vm = this
@@ -177976,8 +178519,7 @@ var render = function() {
                 ? _c(
                     "div",
                     {
-                      staticClass:
-                        "container col-12 glass-table-container p-3 mt-2"
+                      staticClass: "container col-12 bg-white p-3 border mt-2"
                     },
                     [
                       _c("div", { staticClass: "row" }, [
@@ -179204,69 +179746,78 @@ var render = function() {
                             index
                           ) {
                             return _vm.pack.live.includes(bouquet)
-                              ? _c("div", { key: index, staticClass: "item" }, [
-                                  !_vm.editmode
-                                    ? _c("input", {
-                                        staticClass: "pr-2",
-                                        attrs: {
-                                          type: "checkbox",
-                                          id: "bouquet_" + bouquet,
-                                          name: "bouquet_" + bouquet,
-                                          checked: ""
-                                        },
-                                        domProps: { value: bouquet },
-                                        on: {
-                                          change: function($event) {
-                                            return _vm.onCheck(
-                                              bouquet,
-                                              _vm.pack
-                                            )
+                              ? _c(
+                                  "div",
+                                  { key: index, staticClass: "item" },
+                                  [
+                                    !_vm.editmode
+                                      ? _c("input", {
+                                          staticClass: "pr-2",
+                                          attrs: {
+                                            type: "checkbox",
+                                            id: "bouquet_" + bouquet,
+                                            name: "bouquet_" + bouquet,
+                                            checked: ""
+                                          },
+                                          domProps: { value: bouquet },
+                                          on: {
+                                            change: function($event) {
+                                              return _vm.onCheck(
+                                                bouquet,
+                                                _vm.pack
+                                              )
+                                            }
                                           }
-                                        }
-                                      })
-                                    : _c("input", {
-                                        staticClass: "pr-2",
-                                        attrs: {
-                                          type: "checkbox",
-                                          id: "bouquet_" + bouquet,
-                                          name: "bouquet_" + bouquet
-                                        },
-                                        domProps: {
-                                          value: bouquet,
-                                          checked: _vm.code.selected_bouquets.includes(
-                                            bouquet
-                                          )
-                                        },
-                                        on: {
-                                          change: function($event) {
-                                            return _vm.onCheck(
-                                              bouquet,
-                                              _vm.pack
+                                        })
+                                      : _c("input", {
+                                          staticClass: "pr-2",
+                                          attrs: {
+                                            type: "checkbox",
+                                            id: "bouquet_" + bouquet,
+                                            name: "bouquet_" + bouquet
+                                          },
+                                          domProps: {
+                                            value: bouquet,
+                                            checked: _vm.code.selected_bouquets.includes(
+                                              bouquet
                                             )
+                                          },
+                                          on: {
+                                            change: function($event) {
+                                              return _vm.onCheck(
+                                                bouquet,
+                                                _vm.pack
+                                              )
+                                            }
                                           }
-                                        }
-                                      }),
-                                  _vm._v(" "),
-                                  _c("i", {
-                                    staticClass: "fa fa-arrows",
-                                    staticStyle: { float: "right" }
-                                  }),
-                                  _vm._v(" "),
-                                  _c(
-                                    "label",
-                                    { attrs: { for: "bouquet_" + bouquet } },
-                                    [
-                                      _vm._v(
-                                        _vm._s(
-                                          _vm.getBouquetName(
-                                            bouquet,
-                                            _vm.pack.names
-                                          )
-                                        )
+                                        }),
+                                    _vm._v(" "),
+                                    _c("i", {
+                                      staticClass: "fa fa-arrows",
+                                      staticStyle: { float: "right" }
+                                    }),
+                                    _vm._v(" "),
+                                    _vm._l(_vm.pack.names, function(name) {
+                                      return _c(
+                                        "label",
+                                        {
+                                          key: name.id,
+                                          attrs: { for: "bouquet_" + bouquet }
+                                        },
+                                        [
+                                          name.id == bouquet
+                                            ? _c("span", [
+                                                _vm._v(
+                                                  _vm._s(name.bouquet_name)
+                                                )
+                                              ])
+                                            : _vm._e()
+                                        ]
                                       )
-                                    ]
-                                  )
-                                ])
+                                    })
+                                  ],
+                                  2
+                                )
                               : _vm._e()
                           }),
                           0
@@ -179312,69 +179863,78 @@ var render = function() {
                             index
                           ) {
                             return _vm.pack.live.includes(bouquet) == false
-                              ? _c("div", { key: index, staticClass: "item" }, [
-                                  !_vm.editmode
-                                    ? _c("input", {
-                                        staticClass: "pr-2",
-                                        attrs: {
-                                          type: "checkbox",
-                                          id: "bouquet_" + bouquet,
-                                          name: "bouquet_" + bouquet,
-                                          checked: ""
-                                        },
-                                        domProps: { value: bouquet },
-                                        on: {
-                                          change: function($event) {
-                                            return _vm.onCheck(
-                                              bouquet,
-                                              _vm.pack
-                                            )
+                              ? _c(
+                                  "div",
+                                  { key: index, staticClass: "item" },
+                                  [
+                                    !_vm.editmode
+                                      ? _c("input", {
+                                          staticClass: "pr-2",
+                                          attrs: {
+                                            type: "checkbox",
+                                            id: "bouquet_" + bouquet,
+                                            name: "bouquet_" + bouquet,
+                                            checked: ""
+                                          },
+                                          domProps: { value: bouquet },
+                                          on: {
+                                            change: function($event) {
+                                              return _vm.onCheck(
+                                                bouquet,
+                                                _vm.pack
+                                              )
+                                            }
                                           }
-                                        }
-                                      })
-                                    : _c("input", {
-                                        staticClass: "pr-2",
-                                        attrs: {
-                                          type: "checkbox",
-                                          id: "bouquet_" + bouquet,
-                                          name: "bouquet_" + bouquet
-                                        },
-                                        domProps: {
-                                          value: bouquet,
-                                          checked: _vm.code.selected_bouquets.includes(
-                                            bouquet
-                                          )
-                                        },
-                                        on: {
-                                          change: function($event) {
-                                            return _vm.onCheck(
-                                              bouquet,
-                                              _vm.pack
+                                        })
+                                      : _c("input", {
+                                          staticClass: "pr-2",
+                                          attrs: {
+                                            type: "checkbox",
+                                            id: "bouquet_" + bouquet,
+                                            name: "bouquet_" + bouquet
+                                          },
+                                          domProps: {
+                                            value: bouquet,
+                                            checked: _vm.code.selected_bouquets.includes(
+                                              bouquet
                                             )
+                                          },
+                                          on: {
+                                            change: function($event) {
+                                              return _vm.onCheck(
+                                                bouquet,
+                                                _vm.pack
+                                              )
+                                            }
                                           }
-                                        }
-                                      }),
-                                  _vm._v(" "),
-                                  _c("i", {
-                                    staticClass: "fa fa-arrows",
-                                    staticStyle: { float: "right" }
-                                  }),
-                                  _vm._v(" "),
-                                  _c(
-                                    "label",
-                                    { attrs: { for: "bouquet_" + bouquet } },
-                                    [
-                                      _vm._v(
-                                        _vm._s(
-                                          _vm.getBouquetName(
-                                            bouquet,
-                                            _vm.pack.names
-                                          )
-                                        )
+                                        }),
+                                    _vm._v(" "),
+                                    _c("i", {
+                                      staticClass: "fa fa-arrows",
+                                      staticStyle: { float: "right" }
+                                    }),
+                                    _vm._v(" "),
+                                    _vm._l(_vm.pack.names, function(name) {
+                                      return _c(
+                                        "label",
+                                        {
+                                          key: name.id,
+                                          attrs: { for: "bouquet_" + bouquet }
+                                        },
+                                        [
+                                          name.id == bouquet
+                                            ? _c("span", [
+                                                _vm._v(
+                                                  _vm._s(name.bouquet_name)
+                                                )
+                                              ])
+                                            : _vm._e()
+                                        ]
                                       )
-                                    ]
-                                  )
-                                ])
+                                    })
+                                  ],
+                                  2
+                                )
                               : _vm._e()
                           }),
                           0
@@ -180132,11 +180692,9 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c(
-      "span",
-      { staticClass: "input-group-text bg-success border-0 text-white" },
-      [_c("i", { staticClass: "fa fa-search" })]
-    )
+    return _c("span", { staticClass: "input-group-text bg-success" }, [
+      _c("i", { staticClass: "fa fa-search" })
+    ])
   },
   function() {
     var _vm = this
@@ -181081,10 +181639,10 @@ render._withStripped = true
 
 /***/ }),
 
-/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/dashboard.vue?vue&type=template&id=57220a4e&scoped=true&":
-/*!************************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/dashboard.vue?vue&type=template&id=57220a4e&scoped=true& ***!
-  \************************************************************************************************************************************************************************************************************************/
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/dashboard.vue?vue&type=template&id=57220a4e&":
+/*!************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/dashboard.vue?vue&type=template&id=57220a4e& ***!
+  \************************************************************************************************************************************************************************************************************/
 /*! exports provided: render, staticRenderFns */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -181096,178 +181654,232 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "football-dashboard" }, [
-    _c("div", { staticClass: "row mb-5" }, [
-      _vm._m(0),
-      _vm._v(" "),
-      _c("div", { staticClass: "col-md-3 mb-4" }, [
-        _c(
-          "div",
-          { staticClass: "stat-card card-emerald" },
-          [
-            _vm._m(1),
-            _vm._v(" "),
-            _c("div", { staticClass: "stat-content" }, [
-              _c("div", { staticClass: "stat-value" }, [
-                _vm._v(_vm._s(_vm.counts.ActiveCode))
-              ]),
-              _vm._v(" "),
-              _c("div", { staticClass: "stat-label" }, [
-                _vm._v(_vm._s(_vm.trans("acCode_total") || "Active Codes"))
-              ])
+  return _c("div", { staticClass: "container-fluid" }, [
+    _c("div", { staticClass: "row" }, [
+      _c("div", { staticClass: "col-md-4" }, [
+        _c("div", { staticClass: "dbox dbox--color-1" }, [
+          _vm._m(0),
+          _vm._v(" "),
+          _c("div", { staticClass: "dbox__body" }, [
+            _c("span", { staticClass: "dbox__count" }, [
+              _vm._v(_vm._s(_vm.counts.ActiveCode))
             ]),
             _vm._v(" "),
-            _c(
-              "router-link",
-              { staticClass: "stat-action", attrs: { to: "/ActiveCode" } },
-              [
-                _vm._v("View Details "),
-                _c("i", { staticClass: "fa fa-arrow-right" })
-              ]
-            )
-          ],
-          1
-        )
+            _c("span", { staticClass: "dbox__title" }, [
+              _vm._v(_vm._s(_vm.trans("acCode_total")))
+            ])
+          ]),
+          _vm._v(" "),
+          _c(
+            "div",
+            { staticClass: "dbox__action" },
+            [
+              _c(
+                "router-link",
+                {
+                  staticClass: "dbox__action__btn",
+                  attrs: { to: "/ActiveCode" }
+                },
+                [
+                  _vm._v(
+                    "\n                " +
+                      _vm._s(_vm.trans("more")) +
+                      "\n              "
+                  )
+                ]
+              )
+            ],
+            1
+          )
+        ])
       ]),
       _vm._v(" "),
-      _c("div", { staticClass: "col-md-3 mb-4" }, [
-        _c(
-          "div",
-          { staticClass: "stat-card card-blue" },
-          [
-            _vm._m(2),
-            _vm._v(" "),
-            _c("div", { staticClass: "stat-content" }, [
-              _c("div", { staticClass: "stat-value" }, [
-                _vm._v(_vm._s(_vm.counts.Users))
-              ]),
-              _vm._v(" "),
-              _c("div", { staticClass: "stat-label" }, [
-                _vm._v(_vm._s(_vm.trans("users_total") || "Total Users"))
-              ])
+      _c("div", { staticClass: "col-md-4" }, [
+        _c("div", { staticClass: "dbox dbox--color-2" }, [
+          _vm._m(1),
+          _vm._v(" "),
+          _c("div", { staticClass: "dbox__body" }, [
+            _c("span", { staticClass: "dbox__count" }, [
+              _vm._v(_vm._s(_vm.counts.Users))
             ]),
             _vm._v(" "),
-            _c(
-              "router-link",
-              { staticClass: "stat-action", attrs: { to: "/Users" } },
-              [
-                _vm._v("View Squad "),
-                _c("i", { staticClass: "fa fa-arrow-right" })
-              ]
-            )
-          ],
-          1
-        )
+            _c("span", { staticClass: "dbox__title" }, [
+              _vm._v(_vm._s(_vm.trans("users_total")))
+            ])
+          ]),
+          _vm._v(" "),
+          _c(
+            "div",
+            { staticClass: "dbox__action" },
+            [
+              _c(
+                "router-link",
+                { staticClass: "dbox__action__btn", attrs: { to: "/Users" } },
+                [
+                  _vm._v(
+                    "\n                " +
+                      _vm._s(_vm.trans("more")) +
+                      "\n              "
+                  )
+                ]
+              )
+            ],
+            1
+          )
+        ])
       ]),
       _vm._v(" "),
-      _c("div", { staticClass: "col-md-3 mb-4" }, [
-        _c(
-          "div",
-          { staticClass: "stat-card card-purple" },
-          [
-            _vm._m(3),
-            _vm._v(" "),
-            _c("div", { staticClass: "stat-content" }, [
-              _c("div", { staticClass: "stat-value" }, [
-                _vm._v(_vm._s(_vm.counts.MagDevice))
-              ]),
-              _vm._v(" "),
-              _c("div", { staticClass: "stat-label" }, [
-                _vm._v(_vm._s(_vm.trans("mgDevice_total") || "Mag Devices"))
-              ])
+      _c("div", { staticClass: "col-md-4" }, [
+        _c("div", { staticClass: "dbox dbox--color-3" }, [
+          _vm._m(2),
+          _vm._v(" "),
+          _c("div", { staticClass: "dbox__body" }, [
+            _c("span", { staticClass: "dbox__count" }, [
+              _vm._v(_vm._s(_vm.counts.MagDevice))
             ]),
             _vm._v(" "),
-            _c(
-              "router-link",
-              { staticClass: "stat-action", attrs: { to: "/MagDevice" } },
-              [
-                _vm._v("View Devices "),
-                _c("i", { staticClass: "fa fa-arrow-right" })
-              ]
-            )
-          ],
-          1
-        )
+            _c("span", { staticClass: "dbox__title" }, [
+              _vm._v(_vm._s(_vm.trans("mgDevice_total")))
+            ])
+          ]),
+          _vm._v(" "),
+          _c(
+            "div",
+            { staticClass: "dbox__action" },
+            [
+              _c(
+                "router-link",
+                {
+                  staticClass: "dbox__action__btn",
+                  attrs: { to: "/MagDevice" }
+                },
+                [
+                  _vm._v(
+                    "\n                " +
+                      _vm._s(_vm.trans("more")) +
+                      "\n              "
+                  )
+                ]
+              )
+            ],
+            1
+          )
+        ])
       ]),
       _vm._v(" "),
-      _c("div", { staticClass: "col-md-3 mb-4" }, [
-        _c(
-          "div",
-          { staticClass: "stat-card card-orange" },
-          [
-            _vm._m(4),
-            _vm._v(" "),
-            _c("div", { staticClass: "stat-content" }, [
-              _c("div", { staticClass: "stat-value" }, [
-                _vm._v(_vm._s(_vm.counts.Resiler))
-              ]),
-              _vm._v(" "),
-              _c("div", { staticClass: "stat-label" }, [
-                _vm._v(_vm._s(_vm.trans("resellers") || "Transfers"))
-              ])
+      _c("div", { staticClass: "col-md-4" }, [
+        _c("div", { staticClass: "dbox dbox--color-2" }, [
+          _vm._m(3),
+          _vm._v(" "),
+          _c("div", { staticClass: "dbox__body" }, [
+            _c("span", { staticClass: "dbox__count" }, [
+              _vm._v(_vm._s(_vm.counts.Category))
             ]),
             _vm._v(" "),
-            _c(
-              "router-link",
-              { staticClass: "stat-action", attrs: { to: "/Resilers" } },
-              [
-                _vm._v("View Resellers "),
-                _c("i", { staticClass: "fa fa-arrow-right" })
-              ]
-            )
-          ],
-          1
-        )
+            _c("span", { staticClass: "dbox__title" }, [
+              _vm._v(_vm._s(_vm.trans("categories")))
+            ])
+          ]),
+          _vm._v(" "),
+          _c(
+            "div",
+            { staticClass: "dbox__action" },
+            [
+              _c(
+                "router-link",
+                {
+                  staticClass: "dbox__action__btn",
+                  attrs: { to: "/Category" }
+                },
+                [
+                  _vm._v(
+                    "\n                " +
+                      _vm._s(_vm.trans("more")) +
+                      "\n              "
+                  )
+                ]
+              )
+            ],
+            1
+          )
+        ])
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "col-md-4" }, [
+        _c("div", { staticClass: "dbox dbox--color-3" }, [
+          _vm._m(4),
+          _vm._v(" "),
+          _c("div", { staticClass: "dbox__body" }, [
+            _c("span", { staticClass: "dbox__count" }, [
+              _vm._v(_vm._s(_vm.counts.Channel))
+            ]),
+            _vm._v(" "),
+            _c("span", { staticClass: "dbox__title" }, [
+              _vm._v(_vm._s(_vm.trans("channels")))
+            ])
+          ]),
+          _vm._v(" "),
+          _c(
+            "div",
+            { staticClass: "dbox__action" },
+            [
+              _c(
+                "router-link",
+                { staticClass: "dbox__action__btn", attrs: { to: "/Channel" } },
+                [
+                  _vm._v(
+                    "\n                " +
+                      _vm._s(_vm.trans("more")) +
+                      "\n              "
+                  )
+                ]
+              )
+            ],
+            1
+          )
+        ])
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "col-md-4" }, [
+        _c("div", { staticClass: "dbox dbox--color-1" }, [
+          _vm._m(5),
+          _vm._v(" "),
+          _c("div", { staticClass: "dbox__body" }, [
+            _c("span", { staticClass: "dbox__count" }, [
+              _vm._v(_vm._s(_vm.counts.Resiler))
+            ]),
+            _vm._v(" "),
+            _c("span", { staticClass: "dbox__title" }, [
+              _vm._v(_vm._s(_vm.trans("resellers")))
+            ])
+          ]),
+          _vm._v(" "),
+          _c(
+            "div",
+            { staticClass: "dbox__action" },
+            [
+              _c(
+                "router-link",
+                {
+                  staticClass: "dbox__action__btn",
+                  attrs: { to: "/Resilers" }
+                },
+                [
+                  _vm._v(
+                    "\n                " +
+                      _vm._s(_vm.trans("more")) +
+                      "\n              "
+                  )
+                ]
+              )
+            ],
+            1
+          )
+        ])
       ])
     ]),
     _vm._v(" "),
-    _c("div", { staticClass: "row mb-5" }, [
-      _c("div", { staticClass: "col-md-3 mb-4" }, [
-        _c(
-          "div",
-          { staticClass: "mini-stat-card" },
-          [
-            _vm._m(5),
-            _vm._v(" "),
-            _c("div", { staticClass: "mini-info" }, [
-              _c("h4", [_vm._v(_vm._s(_vm.counts.Category))]),
-              _vm._v(" "),
-              _c("p", [_vm._v(_vm._s(_vm.trans("categories") || "Categories"))])
-            ]),
-            _vm._v(" "),
-            _c("router-link", {
-              staticClass: "mini-link",
-              attrs: { to: "/Category" }
-            })
-          ],
-          1
-        )
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "col-md-3 mb-4" }, [
-        _c(
-          "div",
-          { staticClass: "mini-stat-card" },
-          [
-            _vm._m(6),
-            _vm._v(" "),
-            _c("div", { staticClass: "mini-info" }, [
-              _c("h4", [_vm._v(_vm._s(_vm.counts.Channel))]),
-              _vm._v(" "),
-              _c("p", [_vm._v(_vm._s(_vm.trans("channels") || "Channels"))])
-            ]),
-            _vm._v(" "),
-            _c("router-link", {
-              staticClass: "mini-link",
-              attrs: { to: "/Channel" }
-            })
-          ],
-          1
-        )
-      ])
-    ]),
-    _vm._v(" "),
-    _vm._m(7),
+    _vm._m(6),
     _vm._v(" "),
     _c(
       "div",
@@ -181276,93 +181888,171 @@ var render = function() {
           {
             name: "show",
             rawName: "v-show",
-            value: _vm.counts.settings && _vm.counts.settings.ads != "",
-            expression: "counts.settings && counts.settings.ads != ''"
+            value: _vm.counts.settings.ads != "",
+            expression: "counts.settings.ads != ''"
           }
         ],
-        staticClass: "row mb-5"
+        staticClass: "row mb-4"
       },
       [
-        _c("div", { staticClass: "col-12 text-center" }, [
-          _c("div", { staticClass: "ad-board" }, [
-            _c("h4", { staticClass: "text-emerald-400 mb-3" }, [
-              _vm._v(_vm._s(_vm.trans("ads")))
-            ]),
-            _vm._v(" "),
+        _c("div", { staticClass: "col-12" }, [
+          _c("h1", { staticClass: "m-0 text-dark" }, [
+            _vm._v(_vm._s(_vm.trans("ads")))
+          ])
+        ]),
+        _vm._v(" "),
+        _c(
+          "div",
+          { staticClass: "col-12 d-flex justify-content-center mt-4" },
+          [
             _c("img", {
-              staticStyle: { height: "300px", "object-fit": "contain" },
+              staticStyle: { height: "300px" },
               attrs: { src: _vm.getImgUrl(_vm.counts.settings.ads) }
             })
-          ])
-        ])
+          ]
+        )
       ]
     ),
     _vm._v(" "),
-    this.user_type == "Admin"
-      ? _c("div", { staticClass: "row mb-5" }, [
+    this.$showMessage == 1
+      ? _c("div", { staticClass: "row my-5" }, [
           _c("div", { staticClass: "col-12" }, [
-            _c("h3", { staticClass: "section-title text-white mb-4" }, [
-              _c("i", { staticClass: "fa fa-users-cog mr-2" }),
-              _vm._v(" " + _vm._s(_vm.trans("users_solde_2")))
+            _c("h1", { staticClass: "m-0 text-dark" }, [
+              _vm._v(_vm._s(_vm.trans("down_soft")))
+            ])
+          ]),
+          _vm._v(" "),
+          _c("div", [
+            _c(
+              "span",
+              { staticStyle: { color: "rgb(91, 91, 174)", height: "250px" } },
+              [
+                _vm.counts.change_url == "hide"
+                  ? _c(
+                      "a",
+                      {
+                        attrs: {
+                          href: "http://soft.newtvhd.com",
+                          target: "_blank"
+                        }
+                      },
+                      [
+                        _c("img", {
+                          staticStyle: {
+                            "max-width": "450px",
+                            "max-height": "435px",
+                            width: "100%"
+                          },
+                          attrs: {
+                            src: "assets/img/téléchargement.jpg",
+                            title: "Télécharger les softwares",
+                            alt: ""
+                          }
+                        })
+                      ]
+                    )
+                  : _vm._e(),
+                _vm._v(" "),
+                _vm.counts.change_url == "show"
+                  ? _c(
+                      "a",
+                      {
+                        attrs: {
+                          href: "http://soft.class.newtvhd.com",
+                          target: "_blank"
+                        }
+                      },
+                      [
+                        _c("img", {
+                          staticStyle: {
+                            "max-width": "450px",
+                            "max-height": "435px",
+                            width: "100%"
+                          },
+                          attrs: {
+                            src: "assets/img/téléchargement.jpg",
+                            title: "Télécharger les softwares",
+                            alt: ""
+                          }
+                        })
+                      ]
+                    )
+                  : _vm._e()
+              ]
+            )
+          ])
+        ])
+      : _vm._e(),
+    _vm._v(" "),
+    this.user_type == "Admin"
+      ? _c(
+          "div",
+          {
+            staticClass: "roww my-5",
+            staticStyle: { "align-items": "center" }
+          },
+          [
+            _c("div", { staticClass: "col-12" }, [
+              _c("h1", { staticClass: "m-0 text-dark" }, [
+                _vm._v(_vm._s(_vm.trans("users_solde_2")))
+              ])
             ]),
             _vm._v(" "),
             _c(
-              "div",
-              { staticClass: "table-responsive glass-table-container" },
+              "table",
+              { staticClass: "table table-hover" },
               [
-                _c("table", { staticClass: "table text-white mb-0" }, [
-                  _c("thead", { staticClass: "bg-emerald-900/50" }, [
-                    _c("tr", [
-                      _c("th", { staticClass: "border-0" }, [_vm._v("#")]),
-                      _vm._v(" "),
-                      _c("th", { staticClass: "border-0" }, [
-                        _vm._v(_vm._s(_vm.trans("username")))
-                      ]),
-                      _vm._v(" "),
-                      _c("th", { staticClass: "border-0" }, [
-                        _vm._v(_vm._s(_vm.trans("solde")))
-                      ])
-                    ])
-                  ]),
-                  _vm._v(" "),
-                  _c(
-                    "tbody",
-                    [
-                      _vm.onLoad ? _c("tr", [_vm._m(8)]) : _vm._e(),
-                      _vm._v(" "),
-                      _vm._l(_vm.users_list.data, function(user) {
-                        return _c(
-                          "tr",
-                          {
-                            key: user.id,
-                            staticClass:
-                              "border-b border-white/10 hover:bg-white/5"
-                          },
-                          [
-                            _c("td", [_vm._v(_vm._s(user.id))]),
-                            _vm._v(" "),
-                            _c("td", [_vm._v(_vm._s(user.name))]),
-                            _vm._v(" "),
-                            _c("td", [
-                              _c(
-                                "span",
-                                { staticClass: "badge badge-success" },
-                                [_vm._v(_vm._s(user.solde))]
-                              )
-                            ])
-                          ]
-                        )
-                      })
-                    ],
-                    2
-                  )
-                ])
-              ]
+                _c("thead", [
+                  _c("tr", [
+                    _c("th", [_vm._v("#")]),
+                    _vm._v(" "),
+                    _c("th", [_vm._v(_vm._s(_vm.trans("username")))]),
+                    _vm._v(" "),
+                    _c("th", [_vm._v(_vm._s(_vm.trans("solde")))])
+                  ])
+                ]),
+                _vm._v(" "),
+                _c("tr", [
+                  _vm.onLoad
+                    ? _c(
+                        "td",
+                        {
+                          staticClass: "text-center",
+                          attrs: { colspan: "10" }
+                        },
+                        [
+                          _c(
+                            "div",
+                            {
+                              staticClass: "spinner-border",
+                              attrs: { role: "status" }
+                            },
+                            [
+                              _c("span", { staticClass: "sr-only" }, [
+                                _vm._v(_vm._s(_vm.trans("loading")))
+                              ])
+                            ]
+                          )
+                        ]
+                      )
+                    : _vm._e()
+                ]),
+                _vm._v(" "),
+                _vm._l(_vm.users_list.data, function(user) {
+                  return _c("tr", { key: user.id }, [
+                    _c("td", [_vm._v(_vm._s(user.id))]),
+                    _vm._v(" "),
+                    _c("td", [_vm._v(_vm._s(user.name))]),
+                    _vm._v(" "),
+                    _c("td", [_vm._v(_vm._s(user.solde))])
+                  ])
+                })
+              ],
+              2
             ),
             _vm._v(" "),
             _c(
               "div",
-              { staticClass: "mt-3" },
               [
                 _c("vue-paginate-al", {
                   attrs: {
@@ -181375,8 +182065,8 @@ var render = function() {
               ],
               1
             )
-          ])
-        ])
+          ]
+        )
       : _vm._e()
   ])
 }
@@ -181385,78 +182075,69 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "col-12" }, [
-      _c("h2", { staticClass: "section-title text-white mb-4" }, [
-        _c("i", { staticClass: "fa fa-chart-line mr-2" }),
-        _vm._v(" Match Statistics")
-      ])
+    return _c("div", { staticClass: "dbox__icon" }, [
+      _c("i", { staticClass: "fa fa-table", attrs: { "aria-hidden": "true" } })
     ])
   },
   function() {
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "stat-icon" }, [
-      _c("i", { staticClass: "fa fa-ticket" })
+    return _c("div", { staticClass: "dbox__icon" }, [
+      _c("i", { staticClass: "fa fa-users", attrs: { "aria-hidden": "true" } })
     ])
   },
   function() {
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "stat-icon" }, [
-      _c("i", { staticClass: "fa fa-address-card" })
+    return _c("div", { staticClass: "dbox__icon" }, [
+      _c("i", {
+        staticClass: "fa fa-mobile",
+        staticStyle: { "font-size": "22px" },
+        attrs: { "aria-hidden": "true" }
+      })
     ])
   },
   function() {
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "stat-icon" }, [
-      _c("i", { staticClass: "fa fa-desktop" })
+    return _c("div", { staticClass: "dbox__icon" }, [
+      _c("i", {
+        staticClass: "fa fa-th-list",
+        attrs: { "aria-hidden": "true" }
+      })
     ])
   },
   function() {
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "stat-icon" }, [
-      _c("i", { staticClass: "fa fa-briefcase" })
+    return _c("div", { staticClass: "dbox__icon" }, [
+      _c("i", {
+        staticClass: "fa fa-television",
+        attrs: { "aria-hidden": "true" }
+      })
     ])
   },
   function() {
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "mini-icon" }, [
-      _c("i", { staticClass: "fa fa-list" })
+    return _c("div", { staticClass: "dbox__icon" }, [
+      _c("i", { staticClass: "fa fa-users", attrs: { "aria-hidden": "true" } })
     ])
   },
   function() {
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "mini-icon" }, [
-      _c("i", { staticClass: "fa fa-tv" })
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "row mb-5" }, [
-      _c("div", { staticClass: "col-12" }, [
-        _c("h3", { staticClass: "section-title text-white mb-4" }, [
-          _c("i", { staticClass: "fa fa-play-circle mr-2" }),
-          _vm._v(" Player Lineup")
-        ])
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "col-12 text-center mb-4 main-player" }, [
+    return _c("div", { staticClass: "row justify-content-center" }, [
+      _c("div", { staticClass: "col-12 text-center mb-4" }, [
         _c(
           "a",
           {
-            staticClass: "player-glow",
             attrs: {
               href: "https://naxplayer.com/device/dashboard",
               target: "_blank"
@@ -181465,203 +182146,217 @@ var staticRenderFns = [
           [
             _c("img", {
               staticClass: "img-fluid",
-              staticStyle: { "max-height": "80px" },
-              attrs: { src: "assets/img/nax.png", alt: "NAX Player" }
+              staticStyle: { "max-width": "126px" },
+              attrs: { src: "assets/img/nax.png", title: "NAX Player", alt: "" }
             })
           ]
         )
       ]),
       _vm._v(" "),
-      _c("div", { staticClass: "col-12" }, [
-        _c(
-          "div",
-          {
-            staticClass:
-              "d-flex flex-wrap justify-content-center gap-4 player-grid"
-          },
-          [
-            _c(
-              "a",
-              {
-                staticClass: "player-item",
-                attrs: { href: "https://iboiptv.com/", target: "_blank" }
-              },
-              [
-                _c("img", {
-                  attrs: { src: "assets/img/ibo2_2.png", alt: "IBO" }
-                })
-              ]
-            ),
-            _vm._v(" "),
-            _c(
-              "a",
-              {
-                staticClass: "player-item",
+      _c(
+        "div",
+        { staticClass: "d-flex flex-wrap justify-content-center gap-3" },
+        [
+          _c(
+            "a",
+            { attrs: { href: "https://iboiptv.com/", target: "_blank" } },
+            [
+              _c("img", {
+                staticClass: "img-fluid",
+                staticStyle: { "max-width": "126px" },
                 attrs: {
-                  href: "https://iboplayer.pro/manage-playlists/login",
-                  target: "_blank"
+                  src: "assets/img/ibo2_2.png",
+                  title: "IBO IPTV",
+                  alt: ""
                 }
-              },
-              [
-                _c("img", {
-                  attrs: { src: "assets/img/ibopro.jpg", alt: "IBO PRO" }
-                })
-              ]
-            ),
-            _vm._v(" "),
-            _c(
-              "a",
-              {
-                staticClass: "player-item",
+              })
+            ]
+          ),
+          _vm._v(" "),
+          _c(
+            "a",
+            {
+              attrs: {
+                href: "https://iboplayer.pro/manage-playlists/login",
+                target: "_blank"
+              }
+            },
+            [
+              _c("img", {
+                staticClass: "img-fluid",
+                staticStyle: { "max-width": "126px" },
                 attrs: {
-                  href: "https://www.arcplayer.com/manage",
-                  target: "_blank"
+                  src: "assets/img/ibopro.jpg",
+                  title: "IBO PRO APP",
+                  alt: ""
                 }
-              },
-              [
-                _c("img", {
-                  attrs: { src: "assets/img/arc_2.png", alt: "ARC" }
-                })
-              ]
-            ),
-            _vm._v(" "),
-            _c(
-              "a",
-              {
-                staticClass: "player-item",
-                attrs: { href: "https://siptv.eu/mylist/", target: "_blank" }
-              },
-              [
-                _c("img", {
-                  attrs: { src: "assets/img/smart_2.png", alt: "Smart" }
-                })
-              ]
-            ),
-            _vm._v(" "),
-            _c(
-              "a",
-              {
-                staticClass: "player-item",
+              })
+            ]
+          ),
+          _vm._v(" "),
+          _c(
+            "a",
+            {
+              attrs: {
+                href: "https://www.arcplayer.com/manage",
+                target: "_blank"
+              }
+            },
+            [
+              _c("img", {
+                staticClass: "img-fluid",
+                staticStyle: { "max-width": "126px" },
                 attrs: {
-                  href: "https://setsysteme.com/set.app",
-                  target: "_blank"
+                  src: "assets/img/arc_2.png",
+                  title: "ARC Player",
+                  alt: ""
                 }
-              },
-              [
-                _c("img", {
-                  attrs: { src: "assets/img/set_2.png", alt: "SET" }
-                })
-              ]
-            ),
-            _vm._v(" "),
-            _c(
-              "a",
-              {
-                staticClass: "player-item",
-                attrs: { href: "http://www.wolftv.pro/list", target: "_blank" }
-              },
-              [
-                _c("img", {
-                  attrs: { src: "assets/img/wolf_2.png", alt: "Wolf" }
-                })
-              ]
-            ),
-            _vm._v(" "),
-            _c(
-              "a",
-              {
-                staticClass: "player-item",
-                attrs: { href: "https://cms.bayip.tv", target: "_blank" }
-              },
-              [
-                _c("img", {
-                  attrs: { src: "assets/img/bay_2.png", alt: "Bay" }
-                })
-              ]
-            ),
-            _vm._v(" "),
-            _c(
-              "a",
-              {
-                staticClass: "player-item",
+              })
+            ]
+          ),
+          _vm._v(" "),
+          _c(
+            "a",
+            { attrs: { href: "https://siptv.eu/mylist/", target: "_blank" } },
+            [
+              _c("img", {
+                staticClass: "img-fluid",
+                staticStyle: { "max-width": "126px" },
                 attrs: {
-                  href: "https://manage.roomiptv.com/multi",
-                  target: "_blank"
+                  src: "assets/img/smart_2.png",
+                  title: "Smart IPTV",
+                  alt: ""
                 }
-              },
-              [
-                _c("img", {
-                  attrs: { src: "assets/img/room_2.png", alt: "Room" }
-                })
-              ]
-            ),
-            _vm._v(" "),
-            _c(
-              "a",
-              {
-                staticClass: "player-item",
+              })
+            ]
+          ),
+          _vm._v(" "),
+          _c(
+            "a",
+            {
+              attrs: {
+                href: "https://setsysteme.com/set.app",
+                target: "_blank"
+              }
+            },
+            [
+              _c("img", {
+                staticClass: "img-fluid",
+                staticStyle: { "max-width": "126px" },
                 attrs: {
-                  href: "https://www.netiptv.eu/upload",
-                  target: "_blank"
+                  src: "assets/img/set_2.png",
+                  title: "SET IPTV",
+                  alt: ""
                 }
-              },
-              [
-                _c("img", {
-                  attrs: { src: "assets/img/net_2.png", alt: "Net" }
-                })
-              ]
-            ),
-            _vm._v(" "),
-            _c(
-              "a",
-              {
-                staticClass: "player-item",
+              })
+            ]
+          ),
+          _vm._v(" "),
+          _c(
+            "a",
+            { attrs: { href: "http://www.wolftv.pro/list", target: "_blank" } },
+            [
+              _c("img", {
+                staticClass: "img-fluid",
+                staticStyle: { "max-width": "126px" },
                 attrs: {
-                  href: "https://masaplayer.com/mylist",
-                  target: "_blank"
+                  src: "assets/img/wolf_2.png",
+                  title: "Wolf TV Pro",
+                  alt: ""
                 }
-              },
-              [
-                _c("img", {
-                  attrs: { src: "assets/img/masa_2.png", alt: "Masa" }
-                })
-              ]
-            ),
-            _vm._v(" "),
-            _c(
-              "a",
-              {
-                staticClass: "player-item",
+              })
+            ]
+          ),
+          _vm._v(" "),
+          _c(
+            "a",
+            { attrs: { href: "https://cms.bayip.tv", target: "_blank" } },
+            [
+              _c("img", {
+                staticClass: "img-fluid",
+                staticStyle: { "max-width": "126px" },
+                attrs: { src: "assets/img/bay_2.png", title: "BAY TV", alt: "" }
+              })
+            ]
+          ),
+          _vm._v(" "),
+          _c(
+            "a",
+            {
+              attrs: {
+                href: "https://manage.roomiptv.com/multi",
+                target: "_blank"
+              }
+            },
+            [
+              _c("img", {
+                staticClass: "img-fluid",
+                staticStyle: { "max-width": "126px" },
                 attrs: {
-                  href: "https://virginia-player.com/",
-                  target: "_blank"
+                  src: "assets/img/room_2.png",
+                  title: "Room IPTV",
+                  alt: ""
                 }
-              },
-              [
-                _c("img", {
-                  attrs: { src: "assets/img/virginia_2.png", alt: "Virginia" }
-                })
-              ]
-            )
-          ]
-        )
-      ])
+              })
+            ]
+          ),
+          _vm._v(" "),
+          _c(
+            "a",
+            {
+              attrs: { href: "https://www.netiptv.eu/upload", target: "_blank" }
+            },
+            [
+              _c("img", {
+                staticClass: "img-fluid",
+                staticStyle: { "max-width": "126px" },
+                attrs: {
+                  src: "assets/img/net_2.png",
+                  title: "Net IPTV",
+                  alt: ""
+                }
+              })
+            ]
+          ),
+          _vm._v(" "),
+          _c(
+            "a",
+            {
+              attrs: { href: "https://masaplayer.com/mylist", target: "_blank" }
+            },
+            [
+              _c("img", {
+                staticClass: "img-fluid",
+                staticStyle: { "max-width": "126px" },
+                attrs: {
+                  src: "assets/img/masa_2.png",
+                  title: "MASAPLAYER",
+                  alt: ""
+                }
+              })
+            ]
+          ),
+          _vm._v(" "),
+          _c(
+            "a",
+            {
+              attrs: { href: "https://virginia-player.com/", target: "_blank" }
+            },
+            [
+              _c("img", {
+                staticClass: "img-fluid",
+                staticStyle: { "max-width": "126px" },
+                attrs: {
+                  src: "assets/img/virginia_2.png",
+                  title: "Virginia Player",
+                  alt: ""
+                }
+              })
+            ]
+          )
+        ]
+      )
     ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c(
-      "td",
-      { staticClass: "text-center py-4", attrs: { colspan: "3" } },
-      [
-        _c("div", {
-          staticClass: "spinner-border text-emerald-500",
-          attrs: { role: "status" }
-        })
-      ]
-    )
   }
 ]
 render._withStripped = true
@@ -204608,6 +205303,38 @@ var routes = [{
     content: Vue.prototype.$lang
   }]
 }, {
+  name: 'AdminTransactions',
+  path: '/admin-transactions',
+  component: __webpack_require__(/*! ./components/AdminTransactions.vue */ "./resources/js/components/AdminTransactions.vue")["default"],
+  meta: [{
+    name: "usersolde",
+    content: Vue.prototype.$userSolde
+  }, {
+    name: "userSoldeTest",
+    content: Vue.prototype.$userSoldeTest
+  }, {
+    name: "userSoldeApp",
+    content: Vue.prototype.$userSoldeApp
+  }, {
+    name: "userType",
+    content: Vue.prototype.$userType
+  }, {
+    name: "userGift",
+    content: Vue.prototype.$userGift
+  }, {
+    name: "lang",
+    content: Vue.prototype.$lang
+  }],
+  beforeEnter: function beforeEnter(to, from, next) {
+    if (Vue.prototype.$userType != 'Admin') {
+      next({
+        name: 'dashboard'
+      });
+    } else {
+      next();
+    }
+  }
+}, {
   name: 'Channel',
   path: '/Channel',
   component: __webpack_require__(/*! ./components/Channel.vue */ "./resources/js/components/Channel.vue")["default"],
@@ -205017,6 +205744,75 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ActiveCode_vue_vue_type_template_id_56c9cd84___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ActiveCode_vue_vue_type_template_id_56c9cd84___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/components/AdminTransactions.vue":
+/*!*******************************************************!*\
+  !*** ./resources/js/components/AdminTransactions.vue ***!
+  \*******************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _AdminTransactions_vue_vue_type_template_id_2791252e___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./AdminTransactions.vue?vue&type=template&id=2791252e& */ "./resources/js/components/AdminTransactions.vue?vue&type=template&id=2791252e&");
+/* harmony import */ var _AdminTransactions_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./AdminTransactions.vue?vue&type=script&lang=js& */ "./resources/js/components/AdminTransactions.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _AdminTransactions_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _AdminTransactions_vue_vue_type_template_id_2791252e___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _AdminTransactions_vue_vue_type_template_id_2791252e___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/AdminTransactions.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/AdminTransactions.vue?vue&type=script&lang=js&":
+/*!********************************************************************************!*\
+  !*** ./resources/js/components/AdminTransactions.vue?vue&type=script&lang=js& ***!
+  \********************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_AdminTransactions_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib??ref--4-0!../../../node_modules/vue-loader/lib??vue-loader-options!./AdminTransactions.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/AdminTransactions.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_AdminTransactions_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/AdminTransactions.vue?vue&type=template&id=2791252e&":
+/*!**************************************************************************************!*\
+  !*** ./resources/js/components/AdminTransactions.vue?vue&type=template&id=2791252e& ***!
+  \**************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_AdminTransactions_vue_vue_type_template_id_2791252e___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./AdminTransactions.vue?vue&type=template&id=2791252e& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/AdminTransactions.vue?vue&type=template&id=2791252e&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_AdminTransactions_vue_vue_type_template_id_2791252e___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_AdminTransactions_vue_vue_type_template_id_2791252e___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
 
@@ -206332,9 +207128,9 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _dashboard_vue_vue_type_template_id_57220a4e_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./dashboard.vue?vue&type=template&id=57220a4e&scoped=true& */ "./resources/js/components/dashboard.vue?vue&type=template&id=57220a4e&scoped=true&");
+/* harmony import */ var _dashboard_vue_vue_type_template_id_57220a4e___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./dashboard.vue?vue&type=template&id=57220a4e& */ "./resources/js/components/dashboard.vue?vue&type=template&id=57220a4e&");
 /* harmony import */ var _dashboard_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./dashboard.vue?vue&type=script&lang=js& */ "./resources/js/components/dashboard.vue?vue&type=script&lang=js&");
-/* empty/unused harmony star reexport *//* harmony import */ var _dashboard_vue_vue_type_style_index_0_id_57220a4e_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./dashboard.vue?vue&type=style&index=0&id=57220a4e&scoped=true&lang=css& */ "./resources/js/components/dashboard.vue?vue&type=style&index=0&id=57220a4e&scoped=true&lang=css&");
+/* empty/unused harmony star reexport *//* harmony import */ var _dashboard_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./dashboard.vue?vue&type=style&index=0&lang=css& */ "./resources/js/components/dashboard.vue?vue&type=style&index=0&lang=css&");
 /* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
 
 
@@ -206346,11 +207142,11 @@ __webpack_require__.r(__webpack_exports__);
 
 var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__["default"])(
   _dashboard_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
-  _dashboard_vue_vue_type_template_id_57220a4e_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"],
-  _dashboard_vue_vue_type_template_id_57220a4e_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  _dashboard_vue_vue_type_template_id_57220a4e___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _dashboard_vue_vue_type_template_id_57220a4e___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
   false,
   null,
-  "57220a4e",
+  null,
   null
   
 )
@@ -206376,35 +207172,35 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./resources/js/components/dashboard.vue?vue&type=style&index=0&id=57220a4e&scoped=true&lang=css&":
-/*!********************************************************************************************************!*\
-  !*** ./resources/js/components/dashboard.vue?vue&type=style&index=0&id=57220a4e&scoped=true&lang=css& ***!
-  \********************************************************************************************************/
+/***/ "./resources/js/components/dashboard.vue?vue&type=style&index=0&lang=css&":
+/*!********************************************************************************!*\
+  !*** ./resources/js/components/dashboard.vue?vue&type=style&index=0&lang=css& ***!
+  \********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_dashboard_vue_vue_type_style_index_0_id_57220a4e_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/style-loader!../../../node_modules/css-loader??ref--6-1!../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../node_modules/postcss-loader/src??ref--6-2!../../../node_modules/vue-loader/lib??vue-loader-options!./dashboard.vue?vue&type=style&index=0&id=57220a4e&scoped=true&lang=css& */ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/dashboard.vue?vue&type=style&index=0&id=57220a4e&scoped=true&lang=css&");
-/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_dashboard_vue_vue_type_style_index_0_id_57220a4e_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_dashboard_vue_vue_type_style_index_0_id_57220a4e_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__);
-/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_dashboard_vue_vue_type_style_index_0_id_57220a4e_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_dashboard_vue_vue_type_style_index_0_id_57220a4e_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__[key]; }) }(__WEBPACK_IMPORT_KEY__));
- /* harmony default export */ __webpack_exports__["default"] = (_node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_dashboard_vue_vue_type_style_index_0_id_57220a4e_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0___default.a); 
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_dashboard_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/style-loader!../../../node_modules/css-loader??ref--6-1!../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../node_modules/postcss-loader/src??ref--6-2!../../../node_modules/vue-loader/lib??vue-loader-options!./dashboard.vue?vue&type=style&index=0&lang=css& */ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/dashboard.vue?vue&type=style&index=0&lang=css&");
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_dashboard_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_dashboard_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__);
+/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_dashboard_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_dashboard_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_dashboard_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0___default.a); 
 
 /***/ }),
 
-/***/ "./resources/js/components/dashboard.vue?vue&type=template&id=57220a4e&scoped=true&":
-/*!******************************************************************************************!*\
-  !*** ./resources/js/components/dashboard.vue?vue&type=template&id=57220a4e&scoped=true& ***!
-  \******************************************************************************************/
+/***/ "./resources/js/components/dashboard.vue?vue&type=template&id=57220a4e&":
+/*!******************************************************************************!*\
+  !*** ./resources/js/components/dashboard.vue?vue&type=template&id=57220a4e& ***!
+  \******************************************************************************/
 /*! exports provided: render, staticRenderFns */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_dashboard_vue_vue_type_template_id_57220a4e_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./dashboard.vue?vue&type=template&id=57220a4e&scoped=true& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/dashboard.vue?vue&type=template&id=57220a4e&scoped=true&");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_dashboard_vue_vue_type_template_id_57220a4e_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_dashboard_vue_vue_type_template_id_57220a4e___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./dashboard.vue?vue&type=template&id=57220a4e& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/dashboard.vue?vue&type=template&id=57220a4e&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_dashboard_vue_vue_type_template_id_57220a4e___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_dashboard_vue_vue_type_template_id_57220a4e_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_dashboard_vue_vue_type_template_id_57220a4e___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
 

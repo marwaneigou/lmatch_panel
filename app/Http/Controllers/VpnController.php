@@ -8,6 +8,7 @@ use App\VpnSetting;
 use App\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use App\TransactionLog;
 
 class VpnController extends Controller
 {
@@ -88,78 +89,89 @@ class VpnController extends Controller
     //     }
     // }
     public function activateVpn(Request $request)
-{
-    $streaming_user_id = $request->user_id;
+    {
+        $streaming_user_id = $request->user_id;
 
-    // Get the streaming user from mysql2 connection
-    $streamingUser = DB::connection('mysql2')
-        ->table('users')
-        ->where('id', $streaming_user_id)
-        ->first();
+        // Get the streaming user from mysql2 connection
+        $streamingUser = DB::connection('mysql2')
+            ->table('users')
+            ->where('id', $streaming_user_id)
+            ->first();
 
-    if (!$streamingUser) {
-        return response()->json(['error' => 'Streaming user not found'], 404);
+        if (!$streamingUser) {
+            return response()->json(['error' => 'Streaming user not found'], 404);
+        }
+
+        $user_id = auth()->id();
+
+        // Get the main user
+        $mainUser = User::find($user_id);
+
+        if (!$mainUser) {
+            return response()->json(['error' => 'Main user not found'], 404);
+        }
+
+        // Check balance for non-admins
+        $currentSolde = (int) $mainUser->solde;
+        if (Auth::user()->type != 'Admin' && $currentSolde < 1) {
+            return response()->json([
+                'error' => 'Insufficient balance. You need at least 1 point.'
+            ], 400);
+        }
+
+        // Check if VPN already exists
+        $existingVpn = Vpn::where('username', $streamingUser->username)->first();
+        if ($existingVpn) {
+            return response()->json([
+                'error' => 'VPN already activated for this user'
+            ], 400);
+        }
+
+        try {
+            DB::beginTransaction();
+
+            // Deduct 1 point if not admin
+            if (Auth::user()->type != 'Admin') {
+                $newSolde = $currentSolde - 1;
+                $mainUser->update(['solde' => $newSolde]);
+            }
+
+            // ✅ ALWAYS assign VPN host ID = 2
+            $vpnHostId = 2;
+
+            // Create VPN
+            $vpn = Vpn::create([
+                'username' => $streamingUser->username,
+                'password' => $streamingUser->password,
+                'user_id' => $mainUser->id,
+                'vpn_host_id' => $vpnHostId
+            ]);
+
+            TransactionLog::create([
+                'reseller_id' => Auth::user()->id,
+                'target_id' => $streamingUser->id,
+                'target_type' => 'user',
+                'action' => 'vpn',
+                'details' => 'Activated VPN for user ' . $streamingUser->username,
+                'ip' => request()->ip()
+            ]);
+
+            DB::commit();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'VPN activated successfully! 1 point deducted from your balance.',
+                'vpn' => $vpn,
+                'new_balance' => $newSolde
+            ]);
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'error' => 'Failed to activate VPN: ' . $e->getMessage()
+            ], 500);
+        }
     }
-
-    $user_id = auth()->id();
-
-    // Get the main user
-    $mainUser = User::find($user_id);
-
-    if (!$mainUser) {
-        return response()->json(['error' => 'Main user not found'], 404);
-    }
-
-    // Check balance
-    $currentSolde = (int) $mainUser->solde;
-    if ($currentSolde < 1) {
-        return response()->json([
-            'error' => 'Insufficient balance. You need at least 1 point.'
-        ], 400);
-    }
-
-    // Check if VPN already exists
-    $existingVpn = Vpn::where('username', $streamingUser->username)->first();
-    if ($existingVpn) {
-        return response()->json([
-            'error' => 'VPN already activated for this user'
-        ], 400);
-    }
-
-    try {
-        DB::beginTransaction();
-
-        // Deduct 1 point
-        $newSolde = $currentSolde - 1;
-        $mainUser->update(['solde' => $newSolde]);
-
-        // ✅ ALWAYS assign VPN host ID = 2
-        $vpnHostId = 2;
-
-        // Create VPN
-        $vpn = Vpn::create([
-            'username'    => $streamingUser->username,
-            'password'    => $streamingUser->password,
-            'user_id'     => $mainUser->id,
-            'vpn_host_id' => $vpnHostId
-        ]);
-
-        DB::commit();
-
-        return response()->json([
-            'success'      => true,
-            'message'      => 'VPN activated successfully! 1 point deducted from your balance.',
-            'vpn'          => $vpn,
-            'new_balance'  => $newSolde
-        ]);
-
-    } catch (\Exception $e) {
-        DB::rollBack();
-        return response()->json([
-            'error' => 'Failed to activate VPN: ' . $e->getMessage()
-        ], 500);
-    }
-}
 
 
     /**

@@ -59,8 +59,7 @@ Route::post('/code/EnableMD/{id}', 'MagDeviceController@enableMagD')->middleware
 
 
 
-Route::get('{path}', 'HomeController@index')->where('path', '([A-z/]+)?');
-// Route::get('{path}','HomeController@index')->where( 'path', '^(?!.*(/active)).*$' );
+
 
 
 //************************** Transaction ***********************/
@@ -74,6 +73,8 @@ Route::post('code/transactions_by_res', 'ResellerStatisticController@transaction
 Route::get('/code/transactions_by_res', function () {
     abort(404);
 })->middleware('auth');
+
+Route::post('code/transaction_logs', 'TransactionLogController@index')->middleware(['auth']);
 
 //--------------------Active Code --------------------------------------\\
 
@@ -140,6 +141,7 @@ Route::put('code/updateCredit/{id}', 'ResilerController@updateCredit')->middlewa
 Route::put('code/recoverCredit/{id}', 'ResilerController@recoverCredit')->middleware(['auth', 'log.route']);
 Route::post('code/block/{id}', 'ResilerController@block')->middleware('auth');
 Route::post('code/unblock/{id}', 'ResilerController@unblock')->middleware('auth');
+Route::post('code/claim_reseller/{id}', 'ResilerController@claimReseller')->middleware(['auth', 'admin']);
 
 Route::post('code/GetUserAuth', 'HomeController@GetUserAuth')->middleware('auth');
 Route::get('/code/GetUserAuth', function () {
@@ -478,3 +480,5 @@ Route::post('code/coupons', 'ResilerController@user_coupons')->middleware('auth'
 //     Session::put('locale', $locale);
 //     return redirect()->back();
 // });
+
+Route::get('{path}', 'HomeController@index')->where('path', '([A-z0-9\-\/]+)?');

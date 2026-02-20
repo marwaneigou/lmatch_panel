@@ -13,6 +13,7 @@ use App\Channel;
 use App\Category;
 use App\Message;
 use App\Parametre;
+use App\TransactionLog;
 use DB;
 
 use Illuminate\Http\Request;
@@ -27,12 +28,12 @@ class HomeController extends Controller
      */
     public function __construct(Request $request)
     {
-        if(\Request::route()->parameters ) {
-            if(isset(\Request::route()->parameters['path']) && \Request::route()->parameters['path'] != 'active' && \Request::route()->parameters['path'] != 'active02') {
+        if (\Request::route()->parameters) {
+            if (isset(\Request::route()->parameters['path']) && \Request::route()->parameters['path'] != 'active' && \Request::route()->parameters['path'] != 'active02') {
                 $this->middleware('auth');
             }
         }
-        
+
     }
 
     /**
@@ -42,26 +43,26 @@ class HomeController extends Controller
      */
     public function index()
     {
-        if(\Request::route()->parameters ) {
-            if(isset(\Request::route()->parameters['path']) == true && \Request::route()->parameters['path'] == "active") {
+        if (\Request::route()->parameters) {
+            if (isset(\Request::route()->parameters['path']) == true && \Request::route()->parameters['path'] == "active") {
                 return view('active');
             }
 
-            if(isset(\Request::route()->parameters['path']) == true && \Request::route()->parameters['path'] == "active02") {
+            if (isset(\Request::route()->parameters['path']) == true && \Request::route()->parameters['path'] == "active02") {
                 return view('active02');
             }
         }
-        
+
         $user = Auth::user();
         $is_subreseller = SubResiler::where('user_id', $user->id)->first();
-        if($is_subreseller) {
+        if ($is_subreseller) {
             $dd = User::find($is_subreseller->res_id);
-            if($dd) {
+            if ($dd) {
                 $logo = User::find($is_subreseller->res_id)->image;
-            }else{
+            } else {
                 $logo = $user->image;
-            }            
-        }else{
+            }
+        } else {
             $logo = $user->image;
         }
         $token = Auth::user()->session_token;
@@ -69,7 +70,8 @@ class HomeController extends Controller
         return view('home', compact('logo', 'token', 'setting'));
     }
 
-    public function GetUserAuth(){
+    public function GetUserAuth()
+    {
         $user = Auth::user();
         $user_id = auth()->id();
         $user_type = Auth::user()->type;
@@ -83,10 +85,10 @@ class HomeController extends Controller
         $oo = "[$user_pack]";
         $yy = json_decode('[' . $oo . ']', true);
 
-        if($user_type != 'Admin'){            
+        if ($user_type != 'Admin') {
             $packages = DB::connection('mysql2')->table('packages')->select('packages.*')
-            ->whereIn('packages.id' , $yy[0])->get();
-        }else {
+                ->whereIn('packages.id', $yy[0])->get();
+        } else {
             $packages = DB::connection('mysql2')->table('packages')->select('packages.*')->get();
         }
 
@@ -95,39 +97,40 @@ class HomeController extends Controller
         foreach ($packages as $p) {
             $exist = false;
             foreach ($local_packages as $lp) {
-                if($p->id == $lp->package_id) {
+                if ($p->id == $lp->package_id) {
                     $exist = true;
                     $p->order = $lp->order;
                     $p->order_id = $lp->id;
                 }
-            } 
-            if(!$exist) {
+            }
+            if (!$exist) {
                 $p->order = '10000';
             }
-                      
+
         }
-        
+
 
         $packages = \json_decode($packages);
-        usort($packages, function($a, $b) { //Sort the array using a user defined function
+        usort($packages, function ($a, $b) { //Sort the array using a user defined function
             return $a->order < $b->order ? -1 : 1; //Compare the scores
         });
 
         return Response()->json([
             'user_id' => $user_id,
             'user_type' => $user_type,
-            'user_solde' =>$user_solde,
+            'user_solde' => $user_solde,
             'name' => $name,
-            'password' =>$password,
+            'password' => $password,
             'phone' => $phone,
-            'email' =>$email,
-            'host' =>$host,
+            'email' => $email,
+            'host' => $host,
             'packages' => $packages
-        ]);                
+        ]);
     }
 
 
-    public function GetCount(){
+    public function GetCount()
+    {
         $user = Auth::user();
         $user_id = auth()->id();
         $user_type = Auth::user()->type;
@@ -135,24 +138,24 @@ class HomeController extends Controller
         $change_url = 'hide';
 
         $settings = Parametre::first();
-        
-        if($user_type !='Admin'){
+
+        if ($user_type != 'Admin') {
             $aa = ActiveCode::where('active_codes.user_id', $user_id)->count();
             $mm = MultiCode::where('multi_codes.user_id', $user_id)->count();
             $MasterCode = MasterCode::where('master_codes.user_id', $user_id)->count();
-            $Message    = Message::where('messages.recept_id', $user_id)->count();
-            $MagDevice    = MagDevice::where('mag_devices.user_id', $user_id)->count();
+            $Message = Message::where('messages.recept_id', $user_id)->count();
+            $MagDevice = MagDevice::where('mag_devices.user_id', $user_id)->count();
             $users = DB::connection('mysql2')->table('users')->where('member_id', $user_id)->count();
 
-            
 
-            if($user_id == 3109) {
+
+            if ($user_id == 3109) {
                 $change_url = 'show';
-            }else{
+            } else {
                 $subres = SubResiler::where('user_id', $user_id)->first();
 
-                if($subres) {
-                    if($subres->res_id == 3109) {
+                if ($subres) {
+                    if ($subres->res_id == 3109) {
                         $change_url = 'show';
                     }
                 }
@@ -161,49 +164,50 @@ class HomeController extends Controller
             $ActiveCode = $aa + $mm;
             return Response()->json([
                 'ActiveCode' => $ActiveCode,
-                'Message'    => $Message,
-                'Users'      => $users,
+                'Message' => $Message,
+                'Users' => $users,
                 'MasterCode' => $MasterCode,
                 'MagDevice' => $MagDevice,
-                'change_url'    => $change_url,
-                'settings'    => $settings,
+                'change_url' => $change_url,
+                'settings' => $settings,
             ]);
 
-        }else {
+        } else {
             $aa = ActiveCode::count();
             $mm = MultiCode::count();
             $MasterCode = MasterCode::count();
-            $MagDevice  = MagDevice::count();
-            $Message    = Message::where('messages.recept_id', $user_id)->count();
-            $Channel    = DB::connection('mysql2')->table('streams')->count();
-            $Category   = DB::connection('mysql2')->table('categories')->count();
+            $MagDevice = MagDevice::count();
+            $Message = Message::where('messages.recept_id', $user_id)->count();
+            $Channel = DB::connection('mysql2')->table('streams')->count();
+            $Category = DB::connection('mysql2')->table('categories')->count();
             $ActiveCode = $aa + $mm;
 
-            $Resiler    = User::where('users.type', '!=', 'Admin')->count();
+            $Resiler = User::where('users.type', '!=', 'Admin')->count();
             $users = DB::connection('mysql2')->table('users')->where('member_id', $user_id)->count();
 
-           
+
 
             return Response()->json([
                 'ActiveCode' => $ActiveCode,
-                'Channel'    => $Channel,
-                'Category'   => $Category,
-                'Message'    => $Message,
-                'Users'      => $users,
+                'Channel' => $Channel,
+                'Category' => $Category,
+                'Message' => $Message,
+                'Users' => $users,
                 'MasterCode' => $MasterCode,
-                'MagDevice'  => $MagDevice,
-                'Resiler'    => $Resiler,
-                'change_url'    => $change_url,
-                'settings'    => $settings,
+                'MagDevice' => $MagDevice,
+                'Resiler' => $Resiler,
+                'change_url' => $change_url,
+                'settings' => $settings,
             ]);
         }
-        
+
 
 
     }
 
 
-    public function GetPack(){
+    public function GetPack()
+    {
 
         $user = Auth::user();
         $user_id = auth()->id();
@@ -212,11 +216,11 @@ class HomeController extends Controller
         $oo = "[$user_pack]";
         $yy = json_decode('[' . $oo . ']', true);
 
-        if($user_type != 'Admin'){
-            
+        if ($user_type != 'Admin') {
+
             $dd = DB::connection('mysql2')->table('packages')->select('packages.*')
-            ->whereIn('packages.id' , $yy[0])->get();
-        }else {
+                ->whereIn('packages.id', $yy[0])->get();
+        } else {
             $dd = DB::connection('mysql2')->table('packages')->select('packages.*')->get();
         }
 
@@ -226,21 +230,21 @@ class HomeController extends Controller
         foreach ($dd as $p) {
             $exist = false;
             foreach ($local_packages as $lp) {
-                if($p->id == $lp->package_id) {
+                if ($p->id == $lp->package_id) {
                     $exist = true;
                     $p->order = $lp->order;
                     $p->order_id = $lp->id;
                 }
-            } 
-            if(!$exist) {
+            }
+            if (!$exist) {
                 $p->order = '10000';
             }
-                      
+
         }
-        
+
 
         $dd = \json_decode($dd);
-        usort($dd, function($a, $b) { //Sort the array using a user defined function
+        usort($dd, function ($a, $b) { //Sort the array using a user defined function
             return $a->order < $b->order ? -1 : 1; //Compare the scores
         });
 
@@ -248,7 +252,8 @@ class HomeController extends Controller
         return Response()->json($dd);
     }
 
-    public function GetPackID($id){
+    public function GetPackID($id)
+    {
         // $tt = DB::connection('mysql2')->table('packages')->select('packages.*')->where('packages.id' , $id)->first();
         // $names = DB::connection('mysql2')->table('bouquets')->get();
         // $tt->names = $names;
@@ -257,20 +262,20 @@ class HomeController extends Controller
 
         // return Response()->json($tt);
 
-        $tt = DB::connection('mysql2')->table('packages')->select('packages.*')->where('packages.id' , $id)->first();
+        $tt = DB::connection('mysql2')->table('packages')->select('packages.*')->where('packages.id', $id)->first();
         $names = DB::connection('mysql2')->table('bouquets')->get()->toArray();
         $live = [];
         foreach ($names as $bq) {
-            if($bq->bouquet_series == '[]') {
+            if ($bq->bouquet_series == '[]') {
                 $bq->type = 'live';
-                array_push($live, (int)$bq->id);
-            }else{
+                array_push($live, (int) $bq->id);
+            } else {
                 $bq->type = 'movie';
             }
         }
-        usort($names, function($a, $b) {
+        usort($names, function ($a, $b) {
             return $a->type > $b->type ? -1 : 1; //Compare the scores
-        });  
+        });
         $tt->names = $names;
         $tt->all_bouquets = json_decode($tt->bouquets);
         $tt->live = $live;
@@ -287,9 +292,9 @@ class HomeController extends Controller
 
         return 'cach cleared';
     }
-   
-   
-   
+
+
+
     public function Cachconfig()
     {
 
@@ -298,8 +303,8 @@ class HomeController extends Controller
 
         return 'cach cleared';
     }
-    
-    
+
+
     public function CachRoute()
     {
 
@@ -308,8 +313,8 @@ class HomeController extends Controller
 
         return 'cach cleared';
     }
-    
-    
+
+
     public function clearRoute()
     {
         \Artisan::call('route:clear');
@@ -317,8 +322,8 @@ class HomeController extends Controller
 
         return 'cach cleared';
     }
-    
-    
+
+
     public function Clearview()
     {
 
@@ -327,8 +332,8 @@ class HomeController extends Controller
 
         return 'cach cleared';
     }
-    
-      
+
+
     public function Clearcach()
     {
 
@@ -337,16 +342,16 @@ class HomeController extends Controller
 
         return 'cach cleared';
     }
-    
-    
+
+
     public function Clearconfig()
     {
         \Artisan::call('config:clear');
 
         return 'cach cleared';
     }
-    
-    
+
+
     public function optimize()
     {
 
@@ -355,66 +360,77 @@ class HomeController extends Controller
         return 'cach cleared';
     }
 
-    public function getActiveD() {
-        $user = Auth::user();
-        $user_id = auth()->id();
-        $user_type = Auth::user()->type;
-        
-        if($user_type == 'Admin'){
-            $active = ActiveCode::where('enabled', 0)->paginate(10);
-        
-            $users = User::get();
-            foreach ($active as $act) {
-                $act->owner = '';
-                foreach ($users as $user) {
-                    if($user->id == $act->user_id) {
-                        $act->owner = $user->name;
-                    }
-                }
-            }
-            return response()->json(['active'=>$active]);
-        }else{
-            abort(404);
-        }
-    }
-    public function getUsersD() {
+    public function getActiveD()
+    {
         $user = Auth::user();
         $user_id = auth()->id();
         $user_type = Auth::user()->type;
 
-        if($user_type == 'Admin'){
-            $users = DB::connection('mysql2')->table('users')->where('users.enabled' , 0)->paginate(10);
+        if ($user_type == 'Admin') {
+            $active = ActiveCode::where('enabled', 0)->paginate(10);
+
+            $users = User::get();
+            foreach ($active as $act) {
+                $act->owner = '';
+                foreach ($users as $user) {
+                    if ($user->id == $act->user_id) {
+                        $act->owner = $user->name;
+                    }
+                }
+            }
+            return response()->json(['active' => $active]);
+        } else {
+            abort(404);
+        }
+    }
+    public function getUsersD()
+    {
+        $user = Auth::user();
+        $user_id = auth()->id();
+        $user_type = Auth::user()->type;
+
+        if ($user_type == 'Admin') {
+            $users = DB::connection('mysql2')->table('users')->where('users.enabled', 0)->paginate(10);
 
             $users_l = User::get();
             foreach ($users as $act) {
                 $act->owner = '';
                 foreach ($users_l as $user) {
-                    if($act->owner_name != '') { $act->owner = $act->owner_name; }
-                    else{
-                        if($user->id == $act->member_id) {
+                    if ($act->owner_name != '') {
+                        $act->owner = $act->owner_name;
+                    } else {
+                        if ($user->id == $act->member_id) {
                             $act->owner = $user->name;
                         }
                     }
-                    
+
                 }
             }
-            return response()->json(['users'=>$users]);
-        }else{
+            return response()->json(['users' => $users]);
+        } else {
             abort(404);
         }
     }
 
     public function enableUsersD($number)
     {
-        $get_user =  DB::connection('mysql2')->table('users')->where('username' , $number)->first();
-        if($get_user) {
-            return DB::connection('mysql2')->table('users')->where('username' , $number)->update(
+        $get_user = DB::connection('mysql2')->table('users')->where('username', $number)->first();
+        if ($get_user) {
+            TransactionLog::create([
+                'reseller_id' => Auth::user()->id,
+                'target_id' => $get_user->id,
+                'target_type' => 'user',
+                'action' => 'enable',
+                'details' => 'Enabled User ' . $number,
+                'ip' => request()->ip()
+            ]);
+            return DB::connection('mysql2')->table('users')->where('username', $number)->update(
                 [
                     'enabled' => 1,
                 ]
             );
-        }else{
-            return DB::connection('mysql2')->table('users_activecode')->where('username' , $number)->update(
+        } else {
+            return DB::connection('mysql2')->table('users_activecode')->where('username', $number)->update(
                 [
                     'enabled' => 1,
                 ]
@@ -425,18 +441,36 @@ class HomeController extends Controller
     public function enableActiveD($number)
     {
         ActiveCode::where('number', $number)->update([
-            'enabled' => 1 ,
-            
+            'enabled' => 1,
+
         ]);
-        $get_user =  DB::connection('mysql2')->table('users')->where('username' , $number)->first();
-        if($get_user) {
-            return DB::connection('mysql2')->table('users')->where('username' , $number)->update(
+
+        TransactionLog::create([
+            'reseller_id' => Auth::user()->id,
+            'target_id' => 0, // ID might not be easily available if searching by number, using 0 or need to fetch. 
+            'target_type' => 'active_code',
+            'action' => 'enable',
+            'details' => 'Enabled Active Code ' . $number,
+            'ip' => request()->ip()
+        ]);
+
+        TransactionLog::create([
+            'reseller_id' => Auth::user()->id,
+            'target_id' => 0, // ID might not be easily available if searching by number, using 0 or need to fetch. 
+            'target_type' => 'active_code',
+            'action' => 'enable',
+            'details' => 'Enabled Active Code ' . $number,
+            'ip' => request()->ip()
+        ]);
+        $get_user = DB::connection('mysql2')->table('users')->where('username', $number)->first();
+        if ($get_user) {
+            return DB::connection('mysql2')->table('users')->where('username', $number)->update(
                 [
                     'enabled' => 1,
                 ]
             );
-        }else{
-            return DB::connection('mysql2')->table('users_activecode')->where('username' , $number)->update(
+        } else {
+            return DB::connection('mysql2')->table('users_activecode')->where('username', $number)->update(
                 [
                     'enabled' => 1,
                 ]
@@ -448,11 +482,11 @@ class HomeController extends Controller
     // function check_duplicated(Request $request) {
     //     // $users = User::pluck('id');
     //     // $xt_users = DB::connection('mysql2')->table('members')->whereIn('id', $users)->orderBy("id")->select("id", "username")->get();
-        
+
     //     $xt_users = DB::connection('mysql2')->table('members')->pluck('id');
     //     $users = User::whereIn('id', $xt_users)->select("id", "name")->orderBy("id")->get();
 
     //     return response()->json($users);
-       
+
     // }
 }

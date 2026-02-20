@@ -61,7 +61,7 @@
                                 <th>{{trans('bal_test')}}</th>
                                 <th>{{trans('gift')}}</th>
                                 <th>{{trans('recharge')}}</th>
-                                <th v-if="userTypee != 'Admin'">{{trans('recover_crd')}}</th>
+                                <th>{{trans('recover_crd')}}</th>
                                 <th>{{trans('type')}}</th>
                                 <th>{{trans('block')}}</th>
                                 <th>{{trans('action')}}</th>
@@ -89,7 +89,7 @@
                                         {{trans('recharge')}}
                                     </button>
                                 </td>
-                                <td v-if="userTypee != 'Admin'">
+                                <td>
                                     <button type="button" class="btn btn-primary" @click="recoverSolde(user)">
                                         {{trans('recover')}}
                                     </button>
@@ -109,6 +109,9 @@
                                     </a>
                                     <a @click="showChart(user.id)"  title="chart" v-show="$userType === 'Admin'">
                                         <i class="fa fa-line-chart" style="color: blueviolet"></i>
+                                    </a>
+                                    <a v-if="$userType === 'Admin'" @click="claimReseller(user.id)" title="Claim Ownership">
+                                        <i class="fa fa-user-plus mr-1" style="color: green;"></i>
                                     </a>
                                     <a @click="DELETEResiler(user.id)"  :title="trans('delete')">
                                         <i class="fa fa-trash-o mr-1 mr-1" style="color: #DC143C"></i>
@@ -471,8 +474,6 @@
 import LineChart from './LineChart.vue'
     export default {
         mounted() {
-            this.getPack();
-           this.ShowUsers();
                 Fire.$on('AfterCreate' , () => {
                         this.ShowUsers(); 
                         this.getPack();
@@ -828,6 +829,31 @@ import LineChart from './LineChart.vue'
 
         //------------------------------------------DELETE FUNCTION ----------------------------------\\
 
+            claimReseller(id) {
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: "You will become the owner of this reseller!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, claim it!'
+                }).then((result) => {
+                    if (result.value) {
+                        axios.post('code/claim_reseller/' + id).then(() => {
+                            Swal.fire(
+                                'Claimed!',
+                                'You are now the owner.',
+                                'success'
+                            )
+                            Fire.$emit('AfterCreate');
+                        }).catch(() => {
+                            Swal.fire('Failed!', 'There was something wrong.', 'warning');
+                        });
+                    }
+                })
+            },
+
             DELETEResiler(id){
                         Swal.fire({
                             title: 'Are you sure?',
@@ -867,10 +893,10 @@ import LineChart from './LineChart.vue'
             editSolde(user){
                 $('#CreditRecharge').modal('show');
                 if(this.userTypee == 'Admin') {
-                    this.sld = user.solde;
-                    this.sldTest = user.solde_test;
-                    this.sldApp = user.solde_app;
-                    this.gift = user.gift;
+                    this.sld = 0;
+                    this.sldTest = 0;
+                    this.sldApp = 0;
+                    this.gift = 0;
                 }else{
                     this.sld = 0;
                     this.sldTest = 0;
@@ -882,10 +908,10 @@ import LineChart from './LineChart.vue'
             recoverSolde(user){
                 $('#CreditRecover').modal('show');
                 if(this.userTypee == 'Admin') {
-                    this.sld = user.solde;
-                    this.sldTest = user.solde_test;
-                    this.sldApp = user.solde_app;
-                    this.gift = user.gift;
+                    this.sld = 0;
+                    this.sldTest = 0;
+                    this.sldApp = 0;
+                    this.gift = 0;
                 }else{
                     this.sld = 0;
                     this.sldTest = 0;
