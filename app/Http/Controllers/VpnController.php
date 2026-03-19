@@ -131,6 +131,7 @@ class VpnController extends Controller
             DB::beginTransaction();
 
             // Deduct 1 point if not admin
+            $newSolde = $currentSolde;
             if (Auth::user()->type != 'Admin') {
                 $newSolde = $currentSolde - 1;
                 $mainUser->update(['solde' => $newSolde]);
@@ -228,38 +229,35 @@ class VpnController extends Controller
     }
 
     /**
-     * Generate VPN download link
+     * Generate VPN download links for all VPN hosts
      */
-    public function generateVpnDownload($streamingUserId)
+    public function generateVpnDownload($username)
     {
-        // Get the streaming user from mysql2 connection
-        $streamingUser = DB::connection('mysql2')->table('users')->where('id', $streamingUserId)->first();
-        if (!$streamingUser) {
-            return response()->json(['error' => 'Streaming user not found'], 404);
-        }
-
-        // Check if VPN is activated for this streaming user
-        $vpn = Vpn::where('username', $streamingUser->username)->first();
+        // Get VPN record directly from local DB by username (avoids slow mysql2 remote query)
+        $vpn = Vpn::where('username', $username)->first();
         if (!$vpn) {
             return response()->json(['error' => 'VPN not activated for this user'], 404);
         }
 
-        // Get the specific VPN host assigned to this user
-        $vpnSetting = VpnSetting::find($vpn->vpn_host_id);
-        if (!$vpnSetting) {
-            return response()->json(['error' => 'VPN host not configured'], 404);
+        // Get all VPN hosts from the database
+        $allHosts = VpnSetting::all();
+        if ($allHosts->isEmpty()) {
+            return response()->json(['error' => 'No VPN hosts configured'], 404);
         }
 
-        // Generate M3U URL with assigned VPN host
-        $protocol = $vpnSetting->protocol ?? 'http';
-        $host = $vpnSetting->host;
-        $port = $vpnSetting->port;
-        $username = $streamingUser->username;
-        $password = $streamingUser->password;
+        $username = $vpn->username;
+        $password = $vpn->password;
 
-        $m3uUrl = "{$protocol}://{$host}:{$port}/get.php?username={$username}&password={$password}&type=m3u_plus&output=ts";
+        $urls = $allHosts->map(function ($setting, $index) use ($username, $password) {
+            $protocol = $setting->protocol ?? 'http';
+            return [
+                'host_id' => $setting->id,
+                'label'   => 'Host ' . ($index + 1),
+                'url'     => "{$protocol}://{$setting->host}:{$setting->port}/get.php?username={$username}&password={$password}&type=m3u_plus&output=ts",
+            ];
+        });
 
-        return response()->json($m3uUrl);
+        return response()->json($urls);
     }
 
     /**

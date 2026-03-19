@@ -52,10 +52,12 @@
                                     </select>
                                 </div>
                                 <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 col-12 mb-2">
-                                    <select class="form-control" v-model="byUser" @change="showResDet()">
-                                    <option value="">{{trans('all')}}</option>
-                                    <option v-if="res.user" v-for="res in resllers" v-bind:key="res.user_id" :value="res.user_id">{{res.user ? res.user : ''}}</option>
-                                    </select>
+                                    <searchable-select
+                                        v-model="byUser"
+                                        :options="resllers"
+                                        :all-label="trans('all')"
+                                        @change="showResDet()"
+                                    ></searchable-select>
                                 </div>
                                 <div class="input-group col-lg-4 col-md-4 col-sm-12 col-xs-12 col-12 mb-2">
                                     <input                  

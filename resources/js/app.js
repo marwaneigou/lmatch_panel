@@ -25,6 +25,7 @@ Vue.use(VueRouter)
 Vue.component('active-component', require('./components/active.vue').default)
 Vue.component('active02-component', require('./components/active02.vue').default)
 Vue.component('star-rating', StarRating);
+Vue.component('searchable-select', require('./components/SearchableSelect.vue').default);
 
 Vue.prototype.$userType = document.querySelector("meta[name='user-type']").getAttribute('content');
 Vue.prototype.$userSolde = document.querySelector("meta[name='user-solde']").getAttribute('content');

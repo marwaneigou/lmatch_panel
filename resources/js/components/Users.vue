@@ -52,10 +52,12 @@
                                     </select>
                                 </div>
                                 <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 col-12 mb-2">
-                                    <select class="form-control" v-model="byUser" @change="showResDet()">
-                                    <option value="">{{trans('all')}}</option>
-                                    <option v-if="res.user" v-for="res in resllers" v-bind:key="res.user_id" :value="res.user_id">{{res.user ? res.user : ''}}</option>
-                                    </select>
+                                    <searchable-select
+                                        v-model="byUser"
+                                        :options="resllers"
+                                        :all-label="trans('all')"
+                                        @change="showResDet()"
+                                    ></searchable-select>
                                 </div>
                                 <div class="input-group col-lg-4 col-md-4 col-sm-12 col-xs-12 col-12 mb-2">
                                     <input                  
@@ -418,21 +420,29 @@
                         <span class="btn btn-info text-white copy-btn ml-auto" @click.stop.prevent="copyTestingCode">{{trans('copy')}}</span>
                     </div>
 
-                    <div class="col-md-10" v-show="Show_vpn == true">
-                        <input type="text" v-bind="vpn_url" name="vpn_url" id="vpn_url" class="form-control" v-model="vpn_url" >
-                    </div>
-
-                    <div class="col-md-2" v-show="Show_vpn == true">
-                        <span class="btn btn-info text-white copy-btn ml-auto" @click.stop.prevent="copyTestingCode">{{trans('copy')}}</span>
-                    </div>
+                    <template v-if="Show_vpn">
+                        <div v-for="(vpn, index) in vpn_urls" :key="vpn.host_id" class="col-12 mb-2">
+                            <label class="font-weight-bold text-muted small">VPN {{ vpn.label }}</label>
+                            <div class="input-group">
+                                <input type="text" :id="'vpn_url_' + index" class="form-control" :value="vpn.url" readonly>
+                                <div class="input-group-append">
+                                    <span class="btn btn-info text-white" @click.stop.prevent="copyVpnUrl(index)">{{trans('copy')}}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
                 </div>
 
                 </div>
-                <div class="modal-footer">
+                <div class="modal-footer flex-wrap" style="gap:6px;">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">{{trans('close')}}</button>
                     <a v-show="Show_m3u" target="_blank" :href="m3u" class="btn btn-primary">{{trans('download')}}</a>
-                     <a v-show="Show_m3u_plus" target="_blank" :href="m3u_plus" class="btn btn-primary">{{trans('download')}}</a>
-                     <a v-show="Show_vpn" target="_blank" :href="vpn_url" class="btn btn-primary">{{trans('download')}}</a>
+                    <a v-show="Show_m3u_plus" target="_blank" :href="m3u_plus" class="btn btn-primary">{{trans('download')}}</a>
+                    <template v-if="Show_vpn">
+                        <a v-for="vpn in vpn_urls" :key="vpn.host_id" target="_blank" :href="vpn.url" class="btn btn-success">
+                            <i class="fa fa-download mr-1"></i>{{ vpn.label }}
+                        </a>
+                    </template>
                 </div>
                 </div>
             </div>
@@ -501,7 +511,7 @@
             type:'',
             m3u:'',
             m3u_plus:'',
-            vpn_url:'',
+            vpn_urls:[],
             Show_m3u :false,
             Show_m3u_plus: false,
             Show_vpn: false,
@@ -657,13 +667,15 @@
                         testingCodeToCopy.setAttribute('type', 'text')
                         testingCodeToCopy.select()
                          document.execCommand('copy');
-                } else if(this.Show_vpn) {
-                    let testingCodeToCopy = document.querySelector('#vpn_url')
-                        testingCodeToCopy.setAttribute('type', 'text')
-                        testingCodeToCopy.select()
-                         document.execCommand('copy');
                 }
+            },
 
+            copyVpnUrl(index) {
+                let el = document.querySelector('#vpn_url_' + index);
+                if (el) {
+                    el.select();
+                    document.execCommand('copy');
+                }
             },
 
             onChangeM3U(value) {
@@ -694,7 +706,7 @@
 
                     this.m3u = '';
                     this.m3u_plus = '';
-                    this.vpn_url = '';
+                    this.vpn_urls = [];
 
                     // Find the user to check VPN status
                     const user = this.codes.data.find(u => u.username === username);
@@ -711,9 +723,9 @@
 
                                 // Load VPN URL if user has VPN
                                 if (user && user.has_vpn) {
-                                    axios.get('/code/vpn/download/' + user.id)
+                                    axios.get('/code/vpn/download/' + user.username)
                                         .then(vpnResponse => {
-                                            this.vpn_url = vpnResponse.data;
+                                            this.vpn_urls = vpnResponse.data;
                                         })
                                         .catch(error => {
                                             console.log('VPN URL load error:', error);

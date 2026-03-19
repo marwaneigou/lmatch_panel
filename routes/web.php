@@ -348,7 +348,7 @@ Route::get('code/checkSolde', function () {
 Route::post('code/vpn/activate', 'VpnController@activateVpn')->middleware('auth');
 Route::get('code/vpn/settings', 'VpnController@getVpnSettings')->middleware('auth');
 Route::post('code/vpn/settings', 'VpnController@updateVpnSettings')->middleware('auth');
-Route::get('code/vpn/download/{userId}', 'VpnController@generateVpnDownload')->middleware('auth');
+Route::get('code/vpn/download/{username}', 'VpnController@generateVpnDownload')->middleware('auth');
 Route::get('code/vpn/status/{userId}', 'VpnController@checkVpnStatus')->middleware('auth');
 
 
